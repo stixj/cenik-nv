@@ -122,7 +122,7 @@
             padding: 10px 20px;
             position: relative;
             transition: all 0.3s ease;
-            border-radius: 25px;
+            border-radius: 8px;
         }
 
         .nav-link::after {
@@ -133,6 +133,7 @@
             color: #004033;
             background-color: #cbdc4d;
             font-weight: 600;
+            border-radius: 8px;
         }
 
         .nav-link:not(.active):hover {
@@ -206,6 +207,10 @@
             color: #666;
             font-size: 14px;
             font-weight: 400;
+            padding: 10px 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            display: inline-block;
         }
 
         /* Table */
@@ -216,11 +221,14 @@
         table {
             width: 100%;
             border-collapse: collapse;
+            border: none;
         }
 
         thead {
             background-color: #cbdc4d;
             color: #004033;
+            border-radius: 8px 8px 0 0;
+            overflow: hidden;
         }
 
         th {
@@ -230,13 +238,86 @@
             font-weight: 600;
             font-size: 14px;
             letter-spacing: 0.5px;
+            border: none;
+            position: relative;
+        }
+        
+        /* Subtle divider lines in header - not full width */
+        th:not(:first-child)::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 15%;
+            bottom: 15%;
+            width: 1px;
+            background-color: #004033;
+            opacity: 0.2;
+        }
+
+        th:first-child {
+            border-radius: 8px 0 0 0;
+        }
+
+        th:last-child {
+            border-radius: 0 8px 0 0;
+        }
+
+        th:nth-child(3),
+        th:nth-child(4) {
+            text-align: right;
         }
 
         td {
             font-family: 'DirectSans', sans-serif;
             padding: 16px 20px;
-            border-bottom: 1px solid #f0f0f0;
+            border: none;
+            position: relative;
             font-weight: 400;
+        }
+        
+        /* Subtle divider lines - not full width, elegant spacing */
+        tbody tr td:not(:first-child)::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 20%;
+            bottom: 20%;
+            width: 1px;
+            background-color: #cbdc4d;
+            opacity: 0.4;
+        }
+        
+        /* Horizontal divider lines - short, not full width */
+        tbody tr:not(:last-child) td::after {
+            content: '';
+            position: absolute;
+            left: 15%;
+            right: 15%;
+            bottom: 0;
+            height: 1px;
+            background-color: #cbdc4d;
+            opacity: 0.3;
+        }
+        
+        /* Last row - no bottom divider */
+        tbody tr:last-child td::after {
+            display: none;
+        }
+        
+        /* Remove horizontal dividers in first column for Skoda rows (except last) */
+        tbody tr.skoda-category-row:not(.skoda-last-row) td:first-child::after {
+            display: none;
+        }
+        
+        /* Keep divider after last Skoda row in first column */
+        tbody tr.skoda-category-row.skoda-last-row td:first-child::after {
+            display: block;
+            left: 15%;
+            right: 15%;
+            bottom: 0;
+            height: 1px;
+            background-color: #cbdc4d;
+            opacity: 0.5;
         }
 
         tbody tr {
@@ -263,6 +344,23 @@
         tbody tr:nth-child(even):hover {
             background-color: #f0f0f0;
         }
+        
+        /* Remove background color for Skoda category rows in first column */
+        tbody tr.skoda-category-row td:first-child {
+            background-color: transparent !important;
+        }
+        
+        tbody tr.skoda-category-row:hover td:first-child {
+            background-color: transparent !important;
+        }
+        
+        tbody tr.skoda-category-row:nth-child(even) td:first-child {
+            background-color: transparent !important;
+        }
+        
+        tbody tr.skoda-category-row:nth-child(even):hover td:first-child {
+            background-color: transparent !important;
+        }
 
         .kategorie {
             font-family: 'DirectSans', sans-serif;
@@ -275,6 +373,11 @@
             max-width: 600px;
             line-height: 1.6;
             font-weight: 400;
+        }
+
+        .znacka-typ strong {
+            font-weight: 600;
+            color: #004033;
         }
 
         .cena {
@@ -292,6 +395,8 @@
             color: #999;
             font-size: 18px;
             font-weight: 400;
+            background-color: #f8f9fa;
+            border-radius: 8px;
         }
 
         .footer-text {
@@ -392,9 +497,9 @@
                 <thead>
                     <tr>
                         <th>Kategorie</th>
-                        <th>Značka a typ vozidla</th>
-                        <th>Cena 1-10 dní (Kč bez DPH)</th>
-                        <th>Cena 11-30 dní (Kč bez DPH)</th>
+                        <th>Značka a model vozidla</th>
+                        <th>1-10 dní (Kč bez DPH)</th>
+                        <th>11-30 dní (Kč bez DPH)</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody">
@@ -406,6 +511,7 @@
         </div>
 
         <div class="footer-text">
+            <h3 style="font-family: 'DirectSans', sans-serif; font-size: 14px; font-weight: 600; color: #666; margin-bottom: 10px; margin-top: 0;">Doplňující informace</h3>
             Všechny denní sazby jsou bez odpočtu pevných nákladů (z této částky už tedy nebudeme odečítat náklady za opotřebení poškozeného vozidla).<br>
             Ceny nezahrnují pohonné hmoty a případnou spoluúčast za poškození vozidla.<br>
             Pokud je vaše poškozené auto starší než 8 let, sazba za půjčení náhradního auta se o jednu třídu sníží.<br>
@@ -685,8 +791,13 @@
             sortData(currentSort.field, currentSort.direction);
         }
 
-        // Function to highlight search term in text
-        function highlightText(text, searchTerm) {
+        // Function to escape regex special characters
+        function escapeRegex(str) {
+            return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+
+        // Function to highlight search terms in plain text
+        function highlightTextPlain(text, searchTerm) {
             if (!searchTerm || !text) {
                 return escapeHtml(text);
             }
@@ -695,9 +806,14 @@
             const escapedSearchTerm = escapeHtml(searchTerm);
             
             // Create case-insensitive regex to find all occurrences
-            const regex = new RegExp(`(${escapedSearchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+            const regex = new RegExp(`(${escapeRegex(escapedSearchTerm)})`, 'gi');
             
             return escapedText.replace(regex, '<mark class="highlight">$1</mark>');
+        }
+
+        // Function to highlight search term in text (alias for backward compatibility)
+        function highlightText(text, searchTerm) {
+            return highlightTextPlain(text, searchTerm);
         }
 
         // Function to escape HTML to prevent XSS
@@ -775,6 +891,166 @@
             updateTable();
         }
 
+        // Vehicle brands list
+        const vehicleBrands = [
+            'Alfa Romeo', 'Audi', 'Baic', 'BMW', 'Chevrolet', 'Chrysler', 'Citroën', 'Cupra', 
+            'Dacia', 'Dodge', 'DS', 'Fiat', 'Ford', 'Honda', 'Hyundai', 'Infiniti', 'Isuzu', 
+            'Iveco', 'Jaguar', 'Jaecoo', 'Jeep', 'Kia', 'Land Rover', 'Leapmotor', 'Lexus', 'Maserati', 'Mazda', 
+            'Mercedes-Benz', 'MG', 'Mini', 'Mitsubishi', 'Nissan', 'Opel', 'Peugeot', 'Porsche', 
+            'Renault', 'Seat', 'Škoda', 'Smart', 'SsangYong', 'Subaru', 'Suzuki', 'Tesla', 
+            'Toyota', 'Volkswagen', 'Volvo'
+        ];
+
+        // Format brand and model text - make brands bold
+        function formatBrandModelText(text, category) {
+            if (!text) return '';
+            
+            // Helper function to normalize brand name
+            function normalizeBrand(brandName) {
+                return brandName
+                    .replace(/-/g, ' ')
+                    .replace(/\s+/g, ' ')
+                    .trim();
+            }
+            
+            // Helper function to find matching brand at the start of text
+            function findMatchingBrand(part) {
+                const partLower = part.toLowerCase();
+                
+                // Try exact match first
+                for (const brand of vehicleBrands) {
+                    const brandLower = brand.toLowerCase();
+                    const brandNormalized = normalizeBrand(brand).toLowerCase();
+                    const partNormalized = normalizeBrand(part).toLowerCase();
+                    
+                    // Check if part starts with brand name (with space after)
+                    if (partLower.startsWith(brandLower + ' ') || 
+                        partNormalized.startsWith(brandNormalized + ' ') ||
+                        partLower === brandLower) {
+                        return brand;
+                    }
+                }
+                
+                // If no exact match, try to extract brand from beginning of part
+                for (const brand of vehicleBrands) {
+                    const brandLower = brand.toLowerCase();
+                    const brandWords = brandLower.split(/\s+/);
+                    const partWords = partLower.split(/\s+/);
+                    
+                    // Check if first word(s) match brand
+                    let matches = true;
+                    for (let i = 0; i < brandWords.length && i < partWords.length; i++) {
+                        if (partWords[i] !== brandWords[i]) {
+                            matches = false;
+                            break;
+                        }
+                    }
+                    
+                    if (matches && partWords.length > brandWords.length) {
+                        return brand;
+                    }
+                }
+                
+                return null;
+            }
+            
+            // Special handling for "vozy Škoda" - skip formatting
+            if (category && category.toLowerCase().includes('škoda')) {
+                return text;
+            }
+            
+            // Also check if text looks like Škoda models (no brand names, just models like "Citigo", "Fabia + Roomster")
+            const isSkodaCategory = !text.includes(',') || 
+                (text.split(',').length === 1 && !findMatchingBrand(text));
+            
+            if (isSkodaCategory) {
+                // For Škoda category, just return text as is (no brands to make bold)
+                return text;
+            }
+            
+            // Split by comma to get individual entries
+            const parts = text.split(',');
+            const formattedParts = parts.map(part => {
+                part = part.trim();
+                if (!part) return '';
+                
+                const matchedBrand = findMatchingBrand(part);
+                if (matchedBrand) {
+                    // Find where brand name ends in the original text
+                    const brandLower = matchedBrand.toLowerCase();
+                    const partLower = part.toLowerCase();
+                    const brandNormalized = normalizeBrand(matchedBrand).toLowerCase();
+                    const partNormalized = normalizeBrand(part).toLowerCase();
+                    
+                    let brandEndIndex = -1;
+                    
+                    // Try to find exact brand match position
+                    if (partLower.startsWith(brandLower + ' ')) {
+                        brandEndIndex = matchedBrand.length;
+                    } else if (partLower.startsWith(brandLower)) {
+                        // Brand found but might be followed by model without space
+                        brandEndIndex = matchedBrand.length;
+                    } else if (partNormalized.startsWith(brandNormalized + ' ')) {
+                        // Find position in original text by matching normalized versions
+                        // Try different lengths to find where normalized brand ends
+                        for (let i = 1; i <= part.length; i++) {
+                            const testPart = normalizeBrand(part.substring(0, i)).toLowerCase();
+                            if (testPart === brandNormalized) {
+                                brandEndIndex = i;
+                                break;
+                            } else if (testPart.length > brandNormalized.length) {
+                                break;
+                            }
+                        }
+                        if (brandEndIndex === -1) {
+                            brandEndIndex = matchedBrand.length; // Fallback
+                        }
+                    } else if (partNormalized.startsWith(brandNormalized)) {
+                        // Similar logic for case without space
+                        for (let i = 1; i <= part.length; i++) {
+                            const testPart = normalizeBrand(part.substring(0, i)).toLowerCase();
+                            if (testPart === brandNormalized) {
+                                brandEndIndex = i;
+                                break;
+                            } else if (testPart.length > brandNormalized.length) {
+                                break;
+                            }
+                        }
+                        if (brandEndIndex === -1) {
+                            brandEndIndex = matchedBrand.length; // Fallback
+                        }
+                    }
+                    
+                    if (brandEndIndex === -1) {
+                        // Couldn't find exact match, use fallback
+                        brandEndIndex = matchedBrand.length;
+                    }
+                    
+                    // Extract model part
+                    let modelPart = part.substring(brandEndIndex).trim();
+                    
+                    // Always add a space between brand and model if model exists
+                    if (modelPart) {
+                        modelPart = ' ' + modelPart;
+                    }
+                    
+                    // Use normalized brand name (Mercedes-Benz instead of Mercedes Benz)
+                    const normalizedBrand = matchedBrand; // Already normalized from vehicleBrands
+                    
+                    if (modelPart) {
+                        return `<strong>${normalizedBrand}</strong>${modelPart}`;
+                    } else {
+                        return `<strong>${normalizedBrand}</strong>`;
+                    }
+                }
+                
+                // If no brand found, return as is
+                return part;
+            });
+            
+            return formattedParts.join(', ');
+        }
+
         function updateTable() {
             const tbody = document.getElementById('tableBody');
             const noResults = document.getElementById('noResults');
@@ -788,14 +1064,59 @@
                 noResults.style.display = 'none';
                 resultsInfo.textContent = `Nalezeno ${filteredData.length} ${filteredData.length === 1 ? 'záznam' : filteredData.length < 5 ? 'záznamy' : 'záznamů'}`;
                 
-                tbody.innerHTML = filteredData.map(item => `
-                    <tr>
-                        <td class="kategorie">${highlightText(item.kategorie, currentSearchTerm)}</td>
-                        <td class="znacka-typ">${highlightText(item.znacka_typ, currentSearchTerm)}</td>
+                tbody.innerHTML = filteredData.map((item, index) => {
+                    // Check if this is a Skoda category row
+                    const isSkodaCategory = item.kategorie && item.kategorie.toLowerCase().includes('škoda');
+                    // Check if this is the row with "Octavia I + II" - this is where we show "vozy Škoda"
+                    const isOctaviaRow = isSkodaCategory && item.znacka_typ && item.znacka_typ.includes('Octavia I + II');
+                    
+                    // Find if this is the last Skoda row
+                    let isLastSkodaRow = false;
+                    if (isSkodaCategory) {
+                        // Check if next row is not Skoda or if this is the last row
+                        const nextItem = filteredData[index + 1];
+                        isLastSkodaRow = !nextItem || !nextItem.kategorie || !nextItem.kategorie.toLowerCase().includes('škoda');
+                    }
+                    
+                    // Determine category cell content
+                    let categoryCell = '';
+                    if (isSkodaCategory && !isOctaviaRow) {
+                        // For Skoda rows except Octavia I + II, show empty cell
+                        categoryCell = '<td class="kategorie"></td>';
+                    } else {
+                        // For Octavia I + II row and all other categories, show category name
+                        categoryCell = `<td class="kategorie">${highlightTextPlain(item.kategorie, currentSearchTerm)}</td>`;
+                    }
+                    
+                    // First format brands as bold (skip for "vozy Škoda" category)
+                    let formattedBrandModel = formatBrandModelText(item.znacka_typ, item.kategorie);
+                    
+                    // Apply highlighting to formatted text (preserving <strong> tags)
+                    if (currentSearchTerm && formattedBrandModel) {
+                        // Split by <strong> tags to preserve them
+                        const parts = formattedBrandModel.split(/(<strong>.*?<\/strong>)/g);
+                        formattedBrandModel = parts.map(part => {
+                            if (part.startsWith('<strong>')) {
+                                // This is a strong tag - apply highlighting inside it
+                                const innerText = part.replace(/<\/?strong>/g, '');
+                                const highlightedInner = highlightTextPlain(innerText, currentSearchTerm);
+                                return `<strong>${highlightedInner}</strong>`;
+                            } else {
+                                // Regular text - apply highlighting normally
+                                return highlightTextPlain(part, currentSearchTerm);
+                            }
+                        }).join('');
+                    }
+                    
+                    return `
+                    <tr${isSkodaCategory ? ` class="skoda-category-row${isLastSkodaRow ? ' skoda-last-row' : ''}"` : ''}>
+                        ${categoryCell}
+                        <td class="znacka-typ">${formattedBrandModel}</td>
                         <td class="cena">${item.cena_1_10_dni.toLocaleString('cs-CZ')} Kč</td>
                         <td class="cena">${item.cena_11_30_dni.toLocaleString('cs-CZ')} Kč</td>
                     </tr>
-                `).join('');
+                `;
+                }).join('');
             }
         }
 

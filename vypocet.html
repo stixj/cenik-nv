@@ -122,7 +122,7 @@
             padding: 10px 20px;
             position: relative;
             transition: all 0.3s ease;
-            border-radius: 25px;
+            border-radius: 8px;
         }
 
         .nav-link::after {
@@ -133,6 +133,7 @@
             color: #004033;
             background-color: #cbdc4d;
             font-weight: 600;
+            border-radius: 8px;
         }
 
         .nav-link:not(.active):hover {
@@ -169,6 +170,13 @@
 
         .form-section {
             margin-bottom: 30px;
+        }
+
+        /* Visual separation between damaged vehicle category section and rental vehicle section */
+        #damagedVehicleCategorySection + .form-section {
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid #e6e6e6;
         }
 
         .section-title {
@@ -289,9 +297,175 @@
             color: #999;
         }
 
+        /* Category Content Container */
+        #damagedVehicleCategoryContent {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Category Info Section */
+        .category-info {
+            margin-bottom: 20px;
+        }
+
+        .category-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #004033;
+            margin-bottom: 10px;
+            background-color: rgba(203, 220, 77, 0.15);
+            border-bottom: 2px solid #cbdc4d;
+            padding: 8px 12px;
+            padding-bottom: 5px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .category-note {
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+            margin-top: 5px;
+        }
+
+        .category-rates {
+            background-color: rgba(203, 220, 77, 0.10);
+            border-bottom: 2px solid #cbdc4d;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 0;
+            margin-top: 0;
+        }
+
+        .rate-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .rate-item:last-child {
+            border-bottom: none;
+        }
+
+        .rate-label {
+            font-size: 16px;
+            color: #333;
+        }
+
+        .rate-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: #004033;
+        }
+
+        .category-models {
+            margin-top: 0;
+            margin-bottom: 0;
+            padding-top: 24px;
+            border-top: 1px solid #e6e6e6;
+        }
+
+        .models-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #004033;
+            margin-bottom: 15px;
+        }
+
+        .models-table-container {
+            overflow-x: auto;
+        }
+
+        .models-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'DirectSans', sans-serif;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .models-table thead {
+            background-color: #cbdc4d;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .models-table th {
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #004033;
+            border-bottom: 2px solid #004033;
+            white-space: nowrap;
+            position: relative;
+        }
+
+        /* Subtle divider lines in header - not full width */
+        .models-table th:not(:first-child)::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 15%;
+            bottom: 15%;
+            width: 1px;
+            background-color: #004033;
+            opacity: 0.2;
+        }
+
+        .models-table th:first-child {
+            border-radius: 8px 0 0 0;
+        }
+
+        .models-table th:last-child {
+            border-radius: 0 8px 0 0;
+        }
+
+        .models-table th:nth-child(2),
+        .models-table th:nth-child(3) {
+            text-align: right;
+        }
+
+        .models-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e0e0e0;
+            position: relative;
+        }
+
+        /* Subtle divider lines - not full width, elegant spacing */
+        .models-table tbody tr td:not(:first-child)::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 20%;
+            bottom: 20%;
+            width: 1px;
+            background-color: #cbdc4d;
+            opacity: 0.4;
+        }
+
+        .models-table td:nth-child(2),
+        .models-table td:nth-child(3) {
+            text-align: right;
+        }
+
+        .models-table td strong {
+            font-weight: 600;
+            color: #004033;
+        }
+
+        .models-table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .models-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
         /* Results */
         .results-section {
-            background-color: #f8f9fa;
+            background-color: rgba(203, 220, 77, 0.15);
+            border-bottom: 2px solid #cbdc4d;
             border-radius: 8px;
             padding: 25px;
             margin: 30px 0;
@@ -362,6 +536,64 @@
             background-color: #b8c93f;
         }
 
+        .btn-print {
+            font-family: 'DirectSans', sans-serif;
+            background-color: #004033;
+            color: #ffffff;
+            padding: 11.2px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 12.8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-print:hover {
+            background-color: #003025;
+        }
+
+        .btn-reset {
+            font-family: 'DirectSans', sans-serif;
+            background-color: #ffffff;
+            color: #004033;
+            padding: 11.2px 24px;
+            border: 2px solid #004033;
+            border-radius: 8px;
+            font-size: 12.8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-reset:hover {
+            background-color: #f0f0f0;
+            border-color: #003025;
+        }
+
+        /* Hide print footer elements on screen */
+        .print-date {
+            display: none !important;
+            visibility: hidden !important;
+            position: absolute !important;
+            left: -9999px !important;
+        }
+        
+        .print-footer-contact {
+            display: none !important;
+            visibility: hidden !important;
+            position: absolute !important;
+            left: -9999px !important;
+        }
+        
+        /* Print styles are defined in @media print section below */
+        
         .footer-text {
             font-family: 'DirectSans', sans-serif;
             font-size: 12px;
@@ -409,6 +641,566 @@
                 grid-template-columns: 1fr;
             }
         }
+
+         /* Print Styles */
+         @media print {
+             /* Print header with logo */
+             @page {
+                 margin-top: 15mm;
+                 margin-bottom: 25mm;
+                 margin-left: 20mm;
+                 margin-right: 20mm;
+             }
+             
+             /* Force print footer elements to be visible */
+             .print-date,
+             .print-footer-contact {
+                 display: block !important;
+                 visibility: visible !important;
+                 position: fixed !important;
+             }
+             
+             /* Adjust margins for pages */
+             @page:not(:last) {
+                 margin-bottom: 20mm;
+             }
+             
+             @page:last {
+                 margin-bottom: 25mm;
+             }
+             
+             /* Ensure content aligns to left margin (red line) */
+             .main-content {
+                 padding-left: 0 !important;
+                 padding-right: 0 !important;
+             }
+             
+             /* Hide elements that shouldn't be printed */
+             .header,
+             .nav-link,
+             .btn-calculate,
+             .btn-print,
+             .btn-reset,
+             .autocomplete-dropdown,
+             .date-icon {
+                 display: none !important;
+             }
+             
+             /* Ensure print footer contact is visible in print */
+             .print-footer-contact[style*="display: none"] {
+                 display: block !important;
+             }
+             
+             /* Override any inline styles for print footer contact */
+             .print-footer-contact[style],
+             .print-footer-contact {
+                 display: block !important;
+                 visibility: visible !important;
+                 position: fixed !important;
+                 left: auto !important;
+                 right: 20mm !important;
+                 bottom: 10mm !important;
+             }
+             
+             /* Show footer text in print - moved higher on second page */
+             .footer-text {
+                 display: block !important;
+                 margin-top: 16mm;
+                 padding-top: 8mm;
+                 padding-bottom: 20mm;
+                 border-top: 1px solid #e6e6e6;
+                 font-size: 9pt;
+                 line-height: 1.5;
+                 color: #666;
+                 page-break-inside: avoid;
+                 position: relative;
+             }
+             
+             /* Print footer with contact info - bottom right corner, shown after footer-text (last page) */
+             /* Hidden by default, shown only after footer-text in print */
+             .print-footer-contact {
+                 display: block !important;
+                 visibility: visible !important;
+                 position: fixed !important;
+                 bottom: 10mm !important;
+                 right: 20mm !important;
+                 font-size: 9pt !important;
+                 color: #666 !important;
+                 text-align: right !important;
+                 z-index: 1000 !important;
+                 padding: 0 !important;
+                 margin: 0 !important;
+                 opacity: 1 !important;
+                 white-space: nowrap !important;
+                 left: auto !important;
+             }
+             
+             /* Ensure both footer elements are always visible in print */
+             body::after {
+                 content: '';
+                 display: none;
+             }
+             
+             /* Override inline style for print date */
+             .print-date[style],
+             .print-date {
+                 display: block !important;
+                 visibility: visible !important;
+                 position: fixed !important;
+                 left: 20mm !important;
+                 bottom: 10mm !important;
+             }
+
+             /* Hide form sections except first one (damaged vehicle) and category section */
+             .form-section {
+                 display: none !important;
+             }
+
+             /* Show first form section (damaged vehicle info) */
+             .form-section:first-of-type {
+                 display: block !important;
+             }
+
+             /* Show damaged vehicle category section */
+             #damagedVehicleCategorySection {
+                 display: block !important;
+             }
+
+             /* Hide "Pronajímané vozidlo" section by default in print */
+             .form-section:nth-of-type(3) {
+                 display: none !important;
+             }
+             
+             /* Show "Pronajímané vozidlo" section in print when results are visible */
+             /* Using a class-based approach for better browser compatibility */
+             .form-section:nth-of-type(3).show-in-print {
+                 display: block !important;
+                 margin-top: 12mm;
+                 margin-bottom: 12mm;
+                 page-break-after: avoid;
+             }
+             
+             .form-section:nth-of-type(3).show-in-print .section-title {
+                 font-size: 14pt;
+                 font-weight: 600;
+                 color: #1a4d3a;
+                 margin-bottom: 4mm;
+             }
+             
+             .form-section:nth-of-type(3).show-in-print .form-row {
+                 display: grid;
+                 grid-template-columns: repeat(3, 1fr);
+                 gap: 15px;
+                 margin-bottom: 0;
+             }
+             
+             .form-section:nth-of-type(3).show-in-print .form-group {
+                 margin-bottom: 0;
+             }
+             
+             .form-section:nth-of-type(3).show-in-print .form-group label {
+                 font-size: 10pt;
+                 font-weight: 500;
+                 color: #555;
+                 margin-bottom: 3px;
+             }
+             
+             .form-section:nth-of-type(3).show-in-print .form-group input {
+                 font-size: 11pt;
+                 padding: 6px 10px;
+                 border: 1px solid #ccc;
+                 background-color: #fff;
+                 color: #333;
+                 pointer-events: none;
+                 border-radius: 6px;
+             }
+             
+             .form-section:nth-of-type(3).show-in-print #actionButtonsContainer {
+                 display: none !important;
+             }
+             
+             #actionButtonsContainer {
+                 display: none !important;
+             }
+
+             /* Reset body and page */
+             body {
+                 background-color: #ffffff;
+                 color: #333;
+                 font-size: 11pt;
+                 line-height: 1.4;
+                 font-family: 'DirectSans', sans-serif;
+             }
+
+             .main-content {
+                 max-width: 100%;
+                 margin: 0;
+                 padding: 5mm 0 15mm 0;
+                 padding-left: 0 !important;
+                 padding-right: 0 !important;
+                 box-shadow: none;
+                 background-color: #ffffff;
+             }
+             
+             /* Print logo header - aligned to left margin (red line) */
+             .print-logo-header {
+                 display: block !important;
+                 position: absolute;
+                 top: 0;
+                 left: 0;
+                 width: auto;
+                 height: auto;
+                 padding: 0;
+                 background-color: transparent;
+                 z-index: 1000;
+                 page-break-after: avoid;
+                 margin: 0 0 1.5rem 0;
+                 border: none;
+                 text-align: left;
+             }
+             
+             .print-logo-header img {
+                 height: 18mm;
+                 width: auto;
+                 max-width: 60mm;
+                 display: block;
+                 margin: 0;
+             }
+             
+             /* Add top margin to first page content to make room for logo */
+             .main-content {
+                 padding-top: 25mm !important;
+                 position: relative;
+             }
+             
+             /* Ensure logo doesn't interfere with content */
+             .form-container {
+                 margin-top: 0;
+             }
+
+             .form-container {
+                 background-color: #ffffff;
+                 padding: 0;
+                 padding-left: 0 !important;
+                 padding-right: 0 !important;
+                 box-shadow: none;
+                 border-radius: 0;
+                 max-width: 100%;
+             }
+
+             /* Print title */
+             .page-title {
+                 font-size: 22pt;
+                 font-weight: 700;
+                 color: #1a4d3a;
+                 margin-top: 1.5rem;
+                 margin-bottom: 12mm;
+                 text-align: left;
+                 page-break-after: avoid;
+             }
+
+             /* Show form section with damaged vehicle info */
+             .form-section:first-of-type {
+                 display: block !important;
+                 margin-bottom: 12mm;
+                 page-break-after: avoid;
+             }
+
+             .form-section:first-of-type .section-title {
+                 font-size: 14pt;
+                 font-weight: 600;
+                 color: #1a4d3a;
+                 margin-top: 0;
+                 margin-bottom: 6mm;
+             }
+
+             .form-section:first-of-type .form-row {
+                 display: grid;
+                 grid-template-columns: repeat(3, 1fr);
+                 gap: 15px;
+                 margin-bottom: 0;
+             }
+
+             .form-section:first-of-type .form-group {
+                 margin-bottom: 0;
+             }
+
+             .form-section:first-of-type .form-group label {
+                 font-size: 10pt;
+                 font-weight: 500;
+                 color: #555;
+                 margin-bottom: 3px;
+             }
+
+             .form-section:first-of-type .form-group input {
+                 font-size: 11pt;
+                 padding: 6px 10px;
+                 border: 1px solid #ccc;
+                 background-color: #fff;
+                 color: #333;
+                 pointer-events: none;
+                 border-radius: 6px;
+             }
+
+             /* Print section for damaged vehicle category */
+             #damagedVehicleCategorySection {
+                 display: block !important;
+                 page-break-inside: avoid;
+                 margin-top: 12mm;
+                 margin-bottom: 12mm;
+                 padding: 0;
+                 background-color: #ffffff;
+                 border: none;
+             }
+
+             #damagedVehicleCategorySection .section-title {
+                 font-size: 14pt;
+                 font-weight: 600;
+                 color: #1a4d3a;
+                 margin-bottom: 6mm;
+                 page-break-after: avoid;
+                 line-height: 1.3;
+             }
+
+             .category-info {
+                 margin-bottom: 6mm;
+                 background-color: #ffffff;
+                 padding: 0;
+                 border-radius: 0;
+                 box-shadow: none;
+             }
+
+             .category-name {
+                 font-size: 14pt;
+                 font-weight: 600;
+                 color: #004033;
+                 margin-bottom: 4mm;
+             }
+
+             .category-note {
+                 font-size: 10pt;
+                 color: #666;
+                 font-style: italic;
+                 margin-top: 2mm;
+             }
+
+             .category-rates {
+                 background-color: rgba(203, 220, 77, 0.10) !important;
+                 border-bottom: 2px solid #cbdc4d !important;
+                 border-radius: 6px;
+                 padding: 12px;
+                 margin-top: 4mm;
+                 margin-bottom: 10mm;
+                 -webkit-print-color-adjust: exact;
+                 print-color-adjust: exact;
+             }
+
+             .rate-item {
+                 display: flex;
+                 justify-content: space-between;
+                 align-items: center;
+                 padding: 6px 0;
+                 border-bottom: 1px solid #e0e0e0;
+             }
+
+             .rate-item:last-child {
+                 border-bottom: none;
+             }
+
+             .rate-label {
+                 font-size: 11pt;
+                 color: #333;
+             }
+
+             .rate-value {
+                 font-size: 13pt;
+                 font-weight: 600;
+                 color: #004033;
+             }
+
+             /* Models table in print */
+             .category-models {
+                 margin-top: 8mm;
+                 display: block !important;
+             }
+
+             .models-title {
+                 font-size: 13pt;
+                 font-weight: 600;
+                 color: #004033;
+                 margin-top: 10mm;
+                 margin-bottom: 5mm;
+             }
+
+             .models-table-container {
+                 display: block !important;
+                 overflow: visible;
+             }
+
+             .models-table {
+                 width: 100%;
+                 border-collapse: collapse;
+                 font-family: 'DirectSans', sans-serif;
+                 margin-bottom: 8mm;
+                 border-radius: 6px;
+                 overflow: hidden;
+             }
+
+             .models-table thead {
+                 background-color: #cbdc4d !important;
+                 -webkit-print-color-adjust: exact;
+                 print-color-adjust: exact;
+             }
+
+             .models-table th {
+                 padding: 8px 10px;
+                 text-align: left;
+                 font-weight: 600;
+                 color: #004033 !important;
+                 -webkit-print-color-adjust: exact;
+                 print-color-adjust: exact;
+                 border-bottom: 2px solid #004033;
+                 font-size: 10pt;
+             }
+
+             .models-table th:first-child {
+                 border-radius: 6px 0 0 0;
+             }
+
+             .models-table th:last-child {
+                 border-radius: 0 6px 0 0;
+             }
+
+             .models-table th:nth-child(2),
+             .models-table th:nth-child(3) {
+                 text-align: right;
+             }
+
+             .models-table td {
+                 padding: 6px 10px;
+                 border-bottom: 1px solid #e0e0e0;
+                 font-size: 10pt;
+                 color: #333;
+                 line-height: 1.4;
+             }
+
+             .models-table td:nth-child(2),
+             .models-table td:nth-child(3) {
+                 text-align: right;
+                 color: #004033;
+                 font-weight: 600;
+             }
+
+             .models-table td strong {
+                 font-weight: 600;
+                 color: #004033;
+             }
+
+             .models-table tbody tr:last-child td {
+                 border-bottom: none;
+             }
+
+             /* Print results section - only show if it's visible on screen (has actual values) */
+             .results-section[style*="display: none"] {
+                 display: none !important;
+             }
+
+             .results-section:not([style*="display: none"]) {
+                 display: block !important;
+                 page-break-inside: avoid;
+                 margin-top: 12mm;
+                 margin-bottom: 12mm;
+                 padding: 12px;
+                 background-color: rgba(203, 220, 77, 0.15) !important;
+                 border-bottom: 2px solid #cbdc4d !important;
+                 border-radius: 6px;
+                 -webkit-print-color-adjust: exact;
+                 print-color-adjust: exact;
+             }
+
+             .result-row {
+                 display: flex;
+                 justify-content: space-between;
+                 align-items: flex-start;
+                 padding: 6px 0;
+                 border-bottom: 1px solid #e0e0e0;
+                 page-break-inside: avoid;
+             }
+
+             .result-row:last-child {
+                 border-bottom: none;
+             }
+
+             .result-label {
+                 font-size: 11pt;
+                 color: #555;
+             }
+
+             .result-value {
+                 font-size: 13pt;
+                 font-weight: 600;
+                 color: #1a4d3a;
+             }
+
+             .result-note {
+                 font-size: 10pt;
+                 color: #666;
+                 font-style: italic;
+                 margin-top: 2px;
+             }
+
+             /* Print date - bottom left corner, positioned at bottom of page */
+             /* Override screen styles to show in print */
+             .print-date {
+                 display: block !important;
+                 visibility: visible !important;
+                 position: fixed !important;
+                 bottom: 10mm !important;
+                 left: 20mm !important;
+                 text-align: left !important;
+                 font-size: 9pt !important;
+                 color: #666 !important;
+                 z-index: 1000 !important;
+                 margin: 0 !important;
+                 padding: 0 !important;
+                 border: none !important;
+                 white-space: nowrap !important;
+             }
+             
+             /* Footer text - ensure it's on last page */
+             .footer-text {
+                 position: relative;
+                 margin-bottom: 0;
+                 padding-bottom: 0;
+                 page-break-inside: avoid;
+                 margin-top: 16mm;
+                 padding-top: 8mm;
+                 border-top: 1px solid #e6e6e6;
+             }
+
+             /* Hide print vehicle info - we use the actual form sections */
+             .print-vehicle-info {
+                 display: none !important;
+             }
+
+             /* Avoid page breaks */
+             .results-section,
+             #damagedVehicleCategorySection,
+             .form-section:first-of-type {
+                 page-break-inside: avoid;
+             }
+
+             /* Keep some styling for print */
+             * {
+                 box-shadow: none !important;
+             }
+
+             /* Ensure colors print correctly */
+             * {
+                 -webkit-print-color-adjust: exact;
+                 print-color-adjust: exact;
+             }
+         }
     </style>
 </head>
 <body>
@@ -453,16 +1245,53 @@
                     </div>
                 </div>
 
+                <!-- Mezikrok - Nárokovaná kategorie poškozeného vozidla -->
+                <div class="form-section" id="damagedVehicleCategorySection" style="display: none;">
+                    <h2 class="section-title">Na základě zadaných údajů máte nárok na zapůjčení vozidla této třídy.</h2>
+                    <div id="damagedVehicleCategoryContent">
+                        <div class="category-info">
+                            <div class="category-name" id="damagedCategoryName"></div>
+                            <div class="category-note" id="damagedCategoryNote"></div>
+                        </div>
+                        <div class="category-rates">
+                            <div class="rate-item">
+                                <span class="rate-label">Sazba za pronájem 1-10 dní:</span>
+                                <span class="rate-value" id="damagedRate1_10"></span>
+                            </div>
+                            <div class="rate-item">
+                                <span class="rate-label">Sazba za pronájem 11-30 dní:</span>
+                                <span class="rate-value" id="damagedRate11_30"></span>
+                            </div>
+                        </div>
+                        <div class="category-models">
+                            <h3 class="models-title">Modely v této kategorii:</h3>
+                            <div class="models-table-container">
+                                <table class="models-table" id="damagedCategoryModelsTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Značka a model vozidla</th>
+                                            <th>1-10 dní (Kč bez DPH)</th>
+                                            <th>11-30 dní (Kč bez DPH)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="damagedCategoryModelsBody">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Buttons moved to below "Přepočítat" button -->
+                </div>
+
                 <!-- Pronajímané vozidlo -->
                 <div class="form-section">
                     <h2 class="section-title">Pronajímané vozidlo</h2>
                     <div class="form-row">
                         <div class="form-group">
-                            <label>Pronájem vozidla od <span class="required">*</span></label>
-                            <div class="date-input-wrapper">
-                                <input type="date" id="datumPronajmu" required>
-                                <span class="date-icon">📅</span>
-                            </div>
+                            <label>Rok uvedení do provozu</label>
+                            <input type="text" id="rokProvozuPronajmene" placeholder="Vyberte rok" autocomplete="off">
+                            <div class="autocomplete-dropdown" id="rokProvozuPronajmeneDropdown"></div>
                         </div>
                         <div class="form-group">
                             <label>Značka</label>
@@ -475,6 +1304,8 @@
                             <div class="autocomplete-dropdown" id="modelPronajmeneDropdown"></div>
                         </div>
                     </div>
+                    
+                    <!-- Buttons moved to below "Přepočítat" button -->
                 </div>
 
                 <!-- Results -->
@@ -498,15 +1329,51 @@
                         </div>
                     </div>
                 </div>
-
+                
                 <button type="button" class="btn-calculate" id="calculateBtn">Přepočítat</button>
+                
+                <!-- Print and Reset Buttons (shown dynamically based on form state) -->
+                <div id="actionButtonsContainer" style="margin-top: 30px; display: none; gap: 15px; justify-content: center; align-items: center; flex-direction: row;">
+                    <button type="button" class="btn-print" id="printBtn" onclick="window.print()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: middle;">
+                            <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                            <rect x="6" y="14" width="12" height="8"></rect>
+                        </svg>
+                        Tisk do PDF
+                    </button>
+                    <button type="button" class="btn-reset" id="resetBtn" onclick="resetCalculation()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px; vertical-align: middle;">
+                            <polyline points="23 4 23 10 17 10"></polyline>
+                            <polyline points="1 20 1 14 7 14"></polyline>
+                            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                        </svg>
+                        Nový výpočet
+                    </button>
+                </div>
             </form>
+            
+            <!-- Print Logo Header (hidden on screen, visible in print) -->
+            <div class="print-logo-header" style="display: none;">
+                <img src="Loga/Logo+pozitivní+RGB.png" alt="Direct pojišťovna">
+            </div>
 
             <div class="footer-text">
+                <h3 style="font-family: 'DirectSans', sans-serif; font-size: 14px; font-weight: 600; color: #666; margin-bottom: 10px; margin-top: 0;">Doplňující informace</h3>
                 Všechny denní sazby jsou bez odpočtu pevných nákladů (z této částky už tedy nebudeme odečítat náklady za opotřebení poškozeného vozidla).<br>
                 Ceny nezahrnují pohonné hmoty a případnou spoluúčast za poškození vozidla.<br>
                 Pokud je vaše poškozené auto starší než 8 let, sazba za půjčení náhradního auta se o jednu třídu sníží.<br>
                 Cenu půjčovného nad 30 dní je nutné konzultovat s likvidátorem dané škodní události.
+            </div>
+            
+            <!-- Print Date (hidden on screen, visible in print - only on last page) -->
+            <div class="print-date">
+                Datum výpočtu: <span id="printDate"></span>
+            </div>
+            
+            <!-- Print Footer Contact (hidden on screen, visible in print - only on last page) -->
+            <div class="print-footer-contact">
+                www.direct.cz | info@direct.cz
             </div>
         </div>
     </main>
@@ -1123,6 +1990,7 @@
 
             // Initialize autocomplete for year input
             initAutocomplete('rokProvozu', 'rokProvozuDropdown', years);
+            initAutocomplete('rokProvozuPronajmene', 'rokProvozuPronajmeneDropdown', years);
 
             // Disable model inputs initially
             modelPoskozeneInput.disabled = true;
@@ -1898,7 +2766,7 @@
                 
                 // Check if category was reduced due to age
                 if (finalCategory !== baseCategory || finalPriceEntry) {
-                    notes.push('sníženo o 1 třídu (auto starší 8 let)');
+                    notes.push('sníženo o 1 třídu (poškozené vozidlo je starší 8 let)');
                 }
                 
                 const noteText = notes.length > 0 ? notes.join(', ') : '';
@@ -1911,21 +2779,748 @@
                 document.getElementById('noteDo14').textContent = noteText;
                 document.getElementById('noteNad14').textContent = noteText;
                 
-                document.getElementById('resultsSection').style.display = 'block';
+                const resultsSection = document.getElementById('resultsSection');
+                resultsSection.style.display = 'block';
+                
+                // Add class for print visibility
+                resultsSection.classList.add('show-in-print');
+                const rentalSection = document.querySelector('.form-section:nth-of-type(3)');
+                if (rentalSection) {
+                    rentalSection.classList.add('show-in-print');
+                }
+                
+                // Update print date and vehicle info
+                const now = new Date();
+                const dateStr = now.toLocaleDateString('cs-CZ', { 
+                    day: '2-digit', 
+                    month: '2-digit', 
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                const printDateElement = document.getElementById('printDate');
+                if (printDateElement) {
+                    printDateElement.textContent = dateStr;
+                }
+                
+                // Update print vehicle info
+                const printDamagedYear = document.getElementById('printDamagedYear');
+                const printDamagedBrand = document.getElementById('printDamagedBrand');
+                const printDamagedModel = document.getElementById('printDamagedModel');
+                const printDamagedCategory = document.getElementById('printDamagedCategory');
+                const printDamagedCategoryNote = document.getElementById('printDamagedCategoryNote');
+                const printRentalDate = document.getElementById('printRentalDate');
+                const printRentalBrand = document.getElementById('printRentalBrand');
+                const printRentalModel = document.getElementById('printRentalModel');
+                
+                if (printDamagedYear) printDamagedYear.textContent = document.getElementById('rokProvozu').value || '-';
+                if (printDamagedBrand) printDamagedBrand.textContent = document.getElementById('znackaPoskozene').value || '-';
+                if (printDamagedModel) printDamagedModel.textContent = document.getElementById('modelPoskozene').value || '-';
+                
+                // Get damaged category from intermediate step
+                const damagedCategoryName = document.getElementById('damagedCategoryName');
+                if (printDamagedCategory && damagedCategoryName) {
+                    printDamagedCategory.textContent = damagedCategoryName.textContent || '-';
+                }
+                
+                // Get category note if exists
+                const damagedCategoryNote = document.getElementById('damagedCategoryNote');
+                if (printDamagedCategoryNote && damagedCategoryNote && damagedCategoryNote.textContent) {
+                    printDamagedCategoryNote.textContent = damagedCategoryNote.textContent;
+                    printDamagedCategoryNote.style.display = 'block';
+                } else if (printDamagedCategoryNote) {
+                    printDamagedCategoryNote.style.display = 'none';
+                }
+                
+                // Format rental year
+                const rentalYearInput = document.getElementById('rokProvozuPronajmene').value;
+                if (printRentalDate && rentalYearInput) {
+                    printRentalDate.textContent = rentalYearInput;
+                } else if (printRentalDate) {
+                    printRentalDate.textContent = '-';
+                }
+                
+                if (printRentalBrand) printRentalBrand.textContent = document.getElementById('znackaPronajmene').value || '-';
+                if (printRentalModel) printRentalModel.textContent = document.getElementById('modelPronajmene').value || '-';
             } else {
                 alert('Cena pro vybranou kategorii nebyla nalezena.');
             }
         }
 
-        // Set default date to today
-        document.addEventListener('DOMContentLoaded', function() {
-            const today = new Date();
-            const dateStr = today.toISOString().split('T')[0];
-            document.getElementById('datumPronajmu').value = dateStr;
+        // Format brand and model text - make brands bold
+        function formatBrandModelText(text) {
+            if (!text) return '';
+            
+            // Helper function to normalize brand name
+            function normalizeBrand(brandName) {
+                return brandName
+                    .replace(/-/g, ' ')
+                    .replace(/\s+/g, ' ')
+                    .trim();
+            }
+            
+            // Helper function to find matching brand at the start of text
+            function findMatchingBrand(part) {
+                const partLower = part.toLowerCase();
+                
+                // Try exact match first
+                for (const brand of vehicleBrands) {
+                    const brandLower = brand.toLowerCase();
+                    const brandNormalized = normalizeBrand(brand).toLowerCase();
+                    const partNormalized = normalizeBrand(part).toLowerCase();
+                    
+                    // Check if part starts with brand name (with space after)
+                    if (partLower.startsWith(brandLower + ' ') || 
+                        partNormalized.startsWith(brandNormalized + ' ') ||
+                        partLower === brandLower) {
+                        return brand;
+                    }
+                }
+                
+                // If no exact match, try to extract brand from beginning of part
+                for (const brand of vehicleBrands) {
+                    const brandLower = brand.toLowerCase();
+                    const brandWords = brandLower.split(/\s+/);
+                    const partWords = partLower.split(/\s+/);
+                    
+                    // Check if first word(s) match brand
+                    let matches = true;
+                    for (let i = 0; i < brandWords.length && i < partWords.length; i++) {
+                        if (partWords[i] !== brandWords[i]) {
+                            matches = false;
+                            break;
+                        }
+                    }
+                    
+                    if (matches && partWords.length > brandWords.length) {
+                        return brand;
+                    }
+                }
+                
+                return null;
+            }
+            
+            // Special handling for "vozy Škoda" - no brand in text, just model names
+            // Check if text looks like Škoda models (no brand names, just models like "Citigo", "Fabia + Roomster")
+            const isSkodaCategory = !text.includes(',') || 
+                (text.split(',').length === 1 && !findMatchingBrand(text));
+            
+            if (isSkodaCategory) {
+                // For Škoda category, just return text as is (no brands to make bold)
+                return text;
+            }
+            
+            // Split by comma to get individual entries
+            const parts = text.split(',');
+            const formattedParts = parts.map(part => {
+                part = part.trim();
+                if (!part) return '';
+                
+                const matchedBrand = findMatchingBrand(part);
+                if (matchedBrand) {
+                    // Find where brand name ends in the original text
+                    const brandLower = matchedBrand.toLowerCase();
+                    const partLower = part.toLowerCase();
+                    const brandNormalized = normalizeBrand(matchedBrand).toLowerCase();
+                    const partNormalized = normalizeBrand(part).toLowerCase();
+                    
+                    let brandEndIndex = -1;
+                    
+                    // Try to find exact brand match position
+                    if (partLower.startsWith(brandLower + ' ')) {
+                        brandEndIndex = matchedBrand.length;
+                    } else if (partLower.startsWith(brandLower)) {
+                        // Brand found but might be followed by model without space
+                        brandEndIndex = matchedBrand.length;
+                    } else if (partNormalized.startsWith(brandNormalized + ' ')) {
+                        // Find position in original text by matching normalized versions
+                        // Try different lengths to find where normalized brand ends
+                        for (let i = 1; i <= part.length; i++) {
+                            const testPart = normalizeBrand(part.substring(0, i)).toLowerCase();
+                            if (testPart === brandNormalized) {
+                                brandEndIndex = i;
+                                break;
+                            } else if (testPart.length > brandNormalized.length) {
+                                break;
+                            }
+                        }
+                        if (brandEndIndex === -1) {
+                            brandEndIndex = matchedBrand.length; // Fallback
+                        }
+                    } else if (partNormalized.startsWith(brandNormalized)) {
+                        // Similar logic for case without space
+                        for (let i = 1; i <= part.length; i++) {
+                            const testPart = normalizeBrand(part.substring(0, i)).toLowerCase();
+                            if (testPart === brandNormalized) {
+                                brandEndIndex = i;
+                                break;
+                            } else if (testPart.length > brandNormalized.length) {
+                                break;
+                            }
+                        }
+                        if (brandEndIndex === -1) {
+                            brandEndIndex = matchedBrand.length; // Fallback
+                        }
+                    }
+                    
+                    if (brandEndIndex === -1) {
+                        // Couldn't find exact match, use fallback
+                        brandEndIndex = matchedBrand.length;
+                    }
+                    
+                    // Extract model part
+                    let modelPart = part.substring(brandEndIndex).trim();
+                    
+                    // Always add a space between brand and model if model exists
+                    if (modelPart) {
+                        modelPart = ' ' + modelPart;
+                    }
+                    
+                    // Use normalized brand name (Mercedes-Benz instead of Mercedes Benz)
+                    const normalizedBrand = matchedBrand; // Already normalized from vehicleBrands
+                    
+                    if (modelPart) {
+                        return `<strong>${normalizedBrand}</strong>${modelPart}`;
+                    } else {
+                        return `<strong>${normalizedBrand}</strong>`;
+                    }
+                }
+                
+                // If no brand found, return as is
+                return part;
+            });
+            
+            return formattedParts.join(', ');
+        }
 
+        // Calculate and display damaged vehicle category
+        function calculateDamagedVehicleCategory() {
+            const rokProvozu = document.getElementById('rokProvozu').value;
+            const znackaPoskozene = document.getElementById('znackaPoskozene').value;
+            const modelPoskozene = document.getElementById('modelPoskozene').value;
+            const section = document.getElementById('damagedVehicleCategorySection');
+
+            // Check if all fields are filled
+            if (!rokProvozu || !znackaPoskozene || !modelPoskozene) {
+                section.style.display = 'none';
+                return;
+            }
+
+            // Find category of damaged vehicle
+            let damagedCategory = findCategory(znackaPoskozene, modelPoskozene);
+            if (!damagedCategory) {
+                section.style.display = 'none';
+                return;
+            }
+
+            // Check if vehicle is older than 8 years
+            const currentYear = new Date().getFullYear();
+            const yearOfProduction = parseInt(rokProvozu);
+            let finalCategory = damagedCategory;
+            let categoryNote = '';
+            let finalPriceEntry = null;
+
+            if (!isNaN(yearOfProduction) && (currentYear - yearOfProduction) > 8) {
+                // Vehicle is older than 8 years, reduce category by one class
+                if (damagedCategory === 'vozy Škoda' && znackaPoskozene.toLowerCase() === 'škoda') {
+                    // Special handling for Škoda vehicles
+                    const skodaHierarchy = [
+                        { models: ['citigo'], price: { cena_1_10: 500, cena_11_30: 400 } },
+                        { models: ['fabia', 'roomster'], price: { cena_1_10: 600, cena_11_30: 480 } },
+                        { models: ['octavia i', 'octavia ii'], price: { cena_1_10: 600, cena_11_30: 480 } },
+                        { models: ['rapid'], price: { cena_1_10: 650, cena_11_30: 520 } },
+                        { models: ['scala', 'kamiq', 'yeti'], price: { cena_1_10: 750, cena_11_30: 600 } },
+                        { models: ['octavia iii', 'octavia iv'], price: { cena_1_10: 1000, cena_11_30: 800 } },
+                        { models: ['karoq', 'elroq'], price: { cena_1_10: 1100, cena_11_30: 880 } },
+                        { models: ['superb'], price: { cena_1_10: 1200, cena_11_30: 960 } },
+                        { models: ['kodiaq', 'enyaq'], price: { cena_1_10: 1350, cena_11_30: 1080 } }
+                    ];
+
+                    const modelLower = modelPoskozene.toLowerCase();
+                    let currentIndex = -1;
+
+                    for (let i = 0; i < skodaHierarchy.length; i++) {
+                        if (skodaHierarchy[i].models.some(m => {
+                            if (modelLower === m) return true;
+                            if (modelLower.includes(m) || m.includes(modelLower)) return true;
+                            const baseModel = m.split(' ')[0];
+                            const modelBase = modelLower.split(' ')[0];
+                            if (baseModel === modelBase) {
+                                const versionPattern = /[ivx]+/i;
+                                const modelVersion = modelLower.match(versionPattern);
+                                const hierarchyVersion = m.match(versionPattern);
+                                if (modelVersion && hierarchyVersion && modelVersion[0] === hierarchyVersion[0]) {
+                                    return true;
+                                }
+                            }
+                            return false;
+                        })) {
+                            currentIndex = i;
+                            break;
+                        }
+                    }
+
+                    if (currentIndex > 0) {
+                        const lowerEntry = skodaHierarchy[currentIndex - 1];
+                        finalPriceEntry = cenÝkData.find(data => {
+                            if (data.kategorie !== 'vozy Škoda') return false;
+                            return data.cena_1_10_dni === lowerEntry.price.cena_1_10 &&
+                                   data.cena_11_30_dni === lowerEntry.price.cena_11_30;
+                        });
+                        if (finalPriceEntry) {
+                            finalCategory = 'vozy Škoda';
+                            categoryNote = 'sníženo o 1 třídu (poškozené vozidlo je starší 8 let)';
+                        }
+                    }
+                } else {
+                    // Normal downgrade logic
+                    const lowerCategory = getLowerCategory(damagedCategory);
+                    if (lowerCategory) {
+                        finalCategory = lowerCategory;
+                        categoryNote = 'sníženo o 1 třídu (poškozené vozidlo je starší 8 let)';
+                    }
+                }
+            }
+
+            // Get price for final category
+            let price = finalPriceEntry;
+            if (!price) {
+                if (finalCategory === 'vozy Škoda' && znackaPoskozene && modelPoskozene) {
+                    price = findPriceByCategory(finalCategory, znackaPoskozene, modelPoskozene);
+                } else {
+                    price = findPriceByCategory(finalCategory);
+                }
+            }
+
+            if (!price) {
+                section.style.display = 'none';
+                return;
+            }
+
+            // Normalize price structure (handle both finalPriceEntry and findPriceByCategory return formats)
+            const price1_10 = price.cena_1_10 || price.cena_1_10_dni;
+            const price11_30 = price.cena_11_30 || price.cena_11_30_dni;
+
+            if (!price1_10 || !price11_30) {
+                section.style.display = 'none';
+                return;
+            }
+
+            // Find equivalent category for Škoda vehicles to display in category name
+            let equivalentCategoryName = null;
+            if (finalCategory === 'vozy Škoda' && znackaPoskozene && modelPoskozene) {
+                const brandLower = znackaPoskozene.toLowerCase();
+                const modelLower = modelPoskozene.toLowerCase();
+                
+                if (brandLower === 'škoda' || brandLower === 'skoda') {
+                    const equivalentMapping = skodaVWMapping.find(mapping => {
+                        const skodaModelLower = mapping.skoda.toLowerCase();
+                        const mappingModelName = skodaModelLower.replace('škoda ', '').trim();
+                        const mappingModelBase = mappingModelName.split(' ')[0];
+                        const inputModelBase = modelLower.split(' ')[0];
+                        
+                        if (mappingModelBase === inputModelBase) {
+                            return true;
+                        }
+                        
+                        if (mappingModelName.includes(inputModelBase) || inputModelBase.includes(mappingModelBase)) {
+                            return true;
+                        }
+                        
+                        if (skodaModelLower.includes(inputModelBase)) {
+                            return true;
+                        }
+                        
+                        return false;
+                    });
+                    
+                    if (equivalentMapping && equivalentMapping.kategorie) {
+                        equivalentCategoryName = equivalentMapping.kategorie.trim();
+                    }
+                }
+            }
+
+            // Display category name (with equivalent category for Škoda if found)
+            let categoryDisplayName = finalCategory;
+            if (equivalentCategoryName) {
+                categoryDisplayName = finalCategory + ' a ' + equivalentCategoryName;
+            }
+            const categoryNameElement = document.getElementById('damagedCategoryName');
+            categoryNameElement.textContent = categoryDisplayName;
+            
+            // Display note if category was reduced
+            const noteElement = document.getElementById('damagedCategoryNote');
+            if (categoryNote) {
+                noteElement.textContent = categoryNote;
+                noteElement.style.display = 'block';
+            } else {
+                noteElement.textContent = '';
+                noteElement.style.display = 'none';
+            }
+
+            // Display rates
+            document.getElementById('damagedRate1_10').textContent = price1_10.toLocaleString('cs-CZ') + ' Kč bez DPH';
+            document.getElementById('damagedRate11_30').textContent = price11_30.toLocaleString('cs-CZ') + ' Kč bez DPH';
+
+            // Display models in this category
+            const modelsBody = document.getElementById('damagedCategoryModelsBody');
+            modelsBody.innerHTML = '';
+            
+            // Special handling for "vozy Škoda" category
+            if (finalCategory === 'vozy Škoda' && znackaPoskozene && modelPoskozene) {
+                const brandLower = znackaPoskozene.toLowerCase();
+                const modelLower = modelPoskozene.toLowerCase();
+                
+                if (brandLower === 'škoda' || brandLower === 'skoda') {
+                    // Find the specific row for this Škoda model
+                    const skodaModelRow = cenÝkData.find(data => {
+                        if (data.kategorie !== 'vozy Škoda') return false;
+                        const znackaTyp = data.znacka_typ.toLowerCase();
+                        
+                        // Check version patterns like "Octavia I + II"
+                        const fullVersionPattern = /^([a-z\s]+)\s+([ivx]+)\s*\+\s*([ivx]+)$/i;
+                        const fullVersionMatch = znackaTyp.match(fullVersionPattern);
+                        
+                        if (fullVersionMatch) {
+                            const baseModel = fullVersionMatch[1].trim();
+                            const version1 = fullVersionMatch[2].trim();
+                            const version2 = fullVersionMatch[3].trim();
+                            
+                            if (modelLower === baseModel ||
+                                modelLower === (baseModel + ' ' + version1).trim() ||
+                                modelLower === (baseModel + ' ' + version2).trim()) {
+                                return true;
+                            }
+                            
+                            if (modelLower.includes(baseModel)) {
+                                const modelVersion = modelLower.replace(baseModel, '').trim();
+                                if (modelVersion === version1 || modelVersion === version2) {
+                                    return true;
+                                }
+                            }
+                        } else {
+                            // Regular models separated by + (e.g., "Fabia + Roomster")
+                            const models = znackaTyp.split('+').map(m => m.trim().toLowerCase());
+                            
+                            if (models.some(m => {
+                                if (m === modelLower) return true;
+                                if (modelLower.includes(m) || m.includes(modelLower)) return true;
+                                const singleVersionPattern = /^([a-z\s]+)\s+([ivx]+)$/i;
+                                const singleMatch = m.match(singleVersionPattern);
+                                if (singleMatch) {
+                                    const baseModel = singleMatch[1].trim();
+                                    const version = singleMatch[2].trim();
+                                    if (modelLower === (baseModel + ' ' + version).trim()) return true;
+                                    if (modelLower.includes(baseModel) && modelLower.includes(version)) return true;
+                                }
+                                return false;
+                            })) {
+                                return true;
+                            }
+                        }
+                        return false;
+                    });
+                    
+                    // Display the specific Škoda model row
+                    if (skodaModelRow) {
+                        const row = document.createElement('tr');
+                        const formattedText = formatBrandModelText(skodaModelRow.znacka_typ);
+                        row.innerHTML = `
+                            <td>${formattedText}</td>
+                            <td>${skodaModelRow.cena_1_10_dni.toLocaleString('cs-CZ')} Kč</td>
+                            <td>${skodaModelRow.cena_11_30_dni.toLocaleString('cs-CZ')} Kč</td>
+                        `;
+                        modelsBody.appendChild(row);
+                    }
+                    
+                    // Find equivalent category from mapping table
+                    const equivalentMapping = skodaVWMapping.find(mapping => {
+                        const skodaModelLower = mapping.skoda.toLowerCase();
+                        // Extract model name from mapping (e.g., "škoda fabia" -> "fabia")
+                        const mappingModelName = skodaModelLower.replace('škoda ', '').trim();
+                        // Extract base model name (first word, e.g., "fabia" or "octavia i" -> "octavia")
+                        const mappingModelBase = mappingModelName.split(' ')[0];
+                        
+                        // Extract base model from input (e.g., "fabia" or "octavia i" -> "fabia" or "octavia")
+                        const inputModelBase = modelLower.split(' ')[0];
+                        
+                        // Direct match of base models
+                        if (mappingModelBase === inputModelBase) {
+                            return true;
+                        }
+                        
+                        // Check if mapping model name contains input model or vice versa
+                        // (e.g., "fabia" matches "fabia", "octavia i" matches "octavia")
+                        if (mappingModelName.includes(inputModelBase) || inputModelBase.includes(mappingModelBase)) {
+                            return true;
+                        }
+                        
+                        // Also check if full mapping model contains input model
+                        // (e.g., "škoda fabia" contains "fabia")
+                        if (skodaModelLower.includes(inputModelBase)) {
+                            return true;
+                        }
+                        
+                        return false;
+                    });
+                    
+                    // Display all models from equivalent category
+                    if (equivalentMapping && equivalentMapping.kategorie) {
+                        // Filter by category, ignoring trailing spaces
+                        const equivalentCategoryModels = cenÝkData.filter(data => {
+                            const dataCategory = (data.kategorie || '').trim();
+                            const mappingCategory = (equivalentMapping.kategorie || '').trim();
+                            return dataCategory === mappingCategory;
+                        });
+                        equivalentCategoryModels.forEach(item => {
+                            const row = document.createElement('tr');
+                            const formattedText = formatBrandModelText(item.znacka_typ);
+                            row.innerHTML = `
+                                <td>${formattedText}</td>
+                                <td>${item.cena_1_10_dni.toLocaleString('cs-CZ')} Kč</td>
+                                <td>${item.cena_11_30_dni.toLocaleString('cs-CZ')} Kč</td>
+                            `;
+                            modelsBody.appendChild(row);
+                        });
+                    }
+                } else {
+                    // Not Škoda brand, use normal logic
+                    const categoryModels = cenÝkData.filter(data => data.kategorie === finalCategory);
+                    categoryModels.forEach(item => {
+                        const row = document.createElement('tr');
+                        const formattedText = formatBrandModelText(item.znacka_typ);
+                        row.innerHTML = `
+                            <td>${formattedText}</td>
+                            <td>${item.cena_1_10_dni.toLocaleString('cs-CZ')} Kč</td>
+                            <td>${item.cena_11_30_dni.toLocaleString('cs-CZ')} Kč</td>
+                        `;
+                        modelsBody.appendChild(row);
+                    });
+                }
+            } else {
+                // Normal category - display all models
+                const categoryModels = cenÝkData.filter(data => data.kategorie === finalCategory);
+                categoryModels.forEach(item => {
+                    const row = document.createElement('tr');
+                    const formattedText = formatBrandModelText(item.znacka_typ);
+                    row.innerHTML = `
+                        <td>${formattedText}</td>
+                        <td>${item.cena_1_10_dni.toLocaleString('cs-CZ')} Kč</td>
+                        <td>${item.cena_11_30_dni.toLocaleString('cs-CZ')} Kč</td>
+                    `;
+                    modelsBody.appendChild(row);
+                });
+            }
+
+            // Show section
+            section.style.display = 'block';
+            
+            // Update print date when category section is shown
+            updatePrintDate();
+            
+            // Update buttons visibility when category section is shown
+            updateButtonsVisibility();
+        }
+        
+        // Function to update print date
+        function updatePrintDate() {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('cs-CZ', { 
+                day: '2-digit', 
+                month: '2-digit', 
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            const printDateElement = document.getElementById('printDate');
+            if (printDateElement) {
+                printDateElement.textContent = dateStr;
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
             populateDropdowns();
 
             document.getElementById('calculateBtn').addEventListener('click', calculate);
+            
+            // Function to reset calculation form
+            function resetCalculation() {
+                // Reset form inputs
+                document.getElementById('rokProvozu').value = '';
+                document.getElementById('znackaPoskozene').value = '';
+                document.getElementById('modelPoskozene').value = '';
+                document.getElementById('rokProvozuPronajmene').value = '';
+                document.getElementById('znackaPronajmene').value = '';
+                document.getElementById('modelPronajmene').value = '';
+                
+                // Hide results section
+                const resultsSection = document.getElementById('resultsSection');
+                resultsSection.style.display = 'none';
+                resultsSection.classList.remove('show-in-print');
+                
+                // Remove print class from rental section
+                const rentalSection = document.querySelector('.form-section:nth-of-type(3)');
+                if (rentalSection) {
+                    rentalSection.classList.remove('show-in-print');
+                }
+                
+                // Hide damaged vehicle category section
+                document.getElementById('damagedVehicleCategorySection').style.display = 'none';
+                
+                // Hide buttons
+                const actionButtonsContainer = document.getElementById('actionButtonsContainer');
+                if (actionButtonsContainer) actionButtonsContainer.style.display = 'none';
+                
+                // Clear autocomplete dropdowns
+                document.querySelectorAll('.autocomplete-dropdown').forEach(dropdown => {
+                    dropdown.classList.remove('show');
+                });
+                
+                // Reset model inputs (disable them)
+                document.getElementById('modelPoskozene').disabled = true;
+                document.getElementById('modelPronajmene').disabled = true;
+                
+                // Scroll to top of form
+                document.querySelector('.main-content').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+            
+             // Make resetCalculation available globally for onclick
+             window.resetCalculation = resetCalculation;
+            
+            // Show/hide buttons based on what is filled
+            function updateButtonsVisibility() {
+                const rokProvozu = document.getElementById('rokProvozu').value.trim();
+                const znackaPoskozene = document.getElementById('znackaPoskozene').value.trim();
+                const modelPoskozene = document.getElementById('modelPoskozene').value.trim();
+                const rokProvozuPronajmene = document.getElementById('rokProvozuPronajmene').value.trim();
+                const znackaPronajmene = document.getElementById('znackaPronajmene').value.trim();
+                const modelPronajmene = document.getElementById('modelPronajmene').value.trim();
+                const actionButtonsContainer = document.getElementById('actionButtonsContainer');
+                const categorySection = document.getElementById('damagedVehicleCategorySection');
+                
+                // Check if damaged vehicle has required data
+                const hasDamagedData = rokProvozu && znackaPoskozene && modelPoskozene;
+                
+                // Check if rental vehicle has any data filled
+                const hasRentalData = rokProvozuPronajmene || znackaPronajmene || modelPronajmene;
+                
+                // Show buttons if damaged vehicle category is shown OR if any form data is filled
+                if (actionButtonsContainer) {
+                    if ((categorySection && categorySection.style.display !== 'none') || hasDamagedData || hasRentalData) {
+                        actionButtonsContainer.style.display = 'flex';
+                        updatePrintDate();
+                    } else {
+                        actionButtonsContainer.style.display = 'none';
+                    }
+                }
+            }
+            
+            // Make updateButtonsVisibility available globally
+            window.updateButtonsVisibility = updateButtonsVisibility;
+            
+            // Listen for changes in rental vehicle fields
+            const rokProvozuPronajmene = document.getElementById('rokProvozuPronajmene');
+            const znackaPronajmene = document.getElementById('znackaPronajmene');
+            const modelPronajmene = document.getElementById('modelPronajmene');
+            
+            rokProvozuPronajmene.addEventListener('input', updateButtonsVisibility);
+            rokProvozuPronajmene.addEventListener('change', updateButtonsVisibility);
+            znackaPronajmene.addEventListener('input', updateButtonsVisibility);
+            znackaPronajmene.addEventListener('change', updateButtonsVisibility);
+            modelPronajmene.addEventListener('input', updateButtonsVisibility);
+            modelPronajmene.addEventListener('change', updateButtonsVisibility);
+            
+            // Also check when autocomplete items are selected
+            const rokProvozuPronajmeneDropdown = document.getElementById('rokProvozuPronajmeneDropdown');
+            const znackaPronajmeneDropdown = document.getElementById('znackaPronajmeneDropdown');
+            const modelPronajmeneDropdown = document.getElementById('modelPronajmeneDropdown');
+            
+            rokProvozuPronajmeneDropdown.addEventListener('click', function(e) {
+                if (e.target.classList.contains('autocomplete-item')) {
+                    setTimeout(updateButtonsVisibility, 100);
+                }
+            });
+            
+            znackaPronajmeneDropdown.addEventListener('click', function(e) {
+                if (e.target.classList.contains('autocomplete-item')) {
+                    setTimeout(updateButtonsVisibility, 100);
+                }
+            });
+            
+            modelPronajmeneDropdown.addEventListener('click', function(e) {
+                if (e.target.classList.contains('autocomplete-item')) {
+                    setTimeout(updateButtonsVisibility, 100);
+                }
+            });
+            
+            // Update print date when results section is shown
+            const resultsSection = document.getElementById('resultsSection');
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                        if (resultsSection.style.display !== 'none') {
+                            updatePrintDate();
+                        }
+                    }
+                });
+            });
+            observer.observe(resultsSection, { attributes: true, attributeFilter: ['style'] });
+            
+            // Also update print date when category section is shown
+            const categorySection = document.getElementById('damagedVehicleCategorySection');
+            const categoryObserver = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                        if (categorySection.style.display !== 'none') {
+                            updatePrintDate();
+                        }
+                    }
+                });
+            });
+            categoryObserver.observe(categorySection, { attributes: true, attributeFilter: ['style'] });
+
+            // Add event listeners for damaged vehicle fields
+            const rokProvozu = document.getElementById('rokProvozu');
+            const znackaPoskozene = document.getElementById('znackaPoskozene');
+            const modelPoskozene = document.getElementById('modelPoskozene');
+
+            // Add event listeners for damaged vehicle fields - auto-recalculate on change
+            rokProvozu.addEventListener('input', calculateDamagedVehicleCategory);
+            rokProvozu.addEventListener('change', calculateDamagedVehicleCategory);
+            znackaPoskozene.addEventListener('input', calculateDamagedVehicleCategory);
+            znackaPoskozene.addEventListener('change', calculateDamagedVehicleCategory);
+            modelPoskozene.addEventListener('input', calculateDamagedVehicleCategory);
+            modelPoskozene.addEventListener('change', calculateDamagedVehicleCategory);
+            
+            // Initial calculation if fields are already filled
+            setTimeout(() => {
+                calculateDamagedVehicleCategory();
+                updateButtonsVisibility();
+            }, 100);
+
+            // Also listen for autocomplete selections
+            const rokProvozuDropdown = document.getElementById('rokProvozuDropdown');
+            const znackaPoskozeneDropdown = document.getElementById('znackaPoskozeneDropdown');
+            const modelPoskozeneDropdown = document.getElementById('modelPoskozeneDropdown');
+
+            rokProvozuDropdown.addEventListener('click', function(e) {
+                if (e.target.classList.contains('autocomplete-item')) {
+                    setTimeout(calculateDamagedVehicleCategory, 100);
+                }
+            });
+
+            znackaPoskozeneDropdown.addEventListener('click', function(e) {
+                if (e.target.classList.contains('autocomplete-item')) {
+                    setTimeout(calculateDamagedVehicleCategory, 100);
+                }
+            });
+
+            modelPoskozeneDropdown.addEventListener('click', function(e) {
+                if (e.target.classList.contains('autocomplete-item')) {
+                    setTimeout(calculateDamagedVehicleCategory, 100);
+                }
+            });
         });
     </script>
 </body>
