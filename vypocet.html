@@ -1,0 +1,1933 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Výpočet půjčovného za náhradní vozidlo - Direct pojišťovna</title>
+    <style>
+        /* DirectSans Font Faces */
+        @font-face {
+            font-family: 'DirectSans';
+            src: url('Písma/DirectSans-Regular.otf') format('opentype');
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'DirectSans';
+            src: url('Písma/DirectSans-Italic.otf') format('opentype');
+            font-weight: 400;
+            font-style: italic;
+        }
+
+        @font-face {
+            font-family: 'DirectSans';
+            src: url('Písma/DirectSans-Medium.otf') format('opentype');
+            font-weight: 500;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'DirectSans';
+            src: url('Písma/DirectSans-MediumItalic.otf') format('opentype');
+            font-weight: 500;
+            font-style: italic;
+        }
+
+        @font-face {
+            font-family: 'DirectSans';
+            src: url('Písma/DirectSans-Semibold.otf') format('opentype');
+            font-weight: 600;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'DirectSans';
+            src: url('Písma/DirectSans-SemiboldItalic.otf') format('opentype');
+            font-weight: 600;
+            font-style: italic;
+        }
+
+        @font-face {
+            font-family: 'DirectSans';
+            src: url('Písma/DirectSans-Bold.otf') format('opentype');
+            font-weight: 700;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'DirectSans';
+            src: url('Písma/DirectSans-BoldItalic.otf') format('opentype');
+            font-weight: 700;
+            font-style: italic;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DirectSans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        /* Header */
+        .header {
+            background-color: #ffffff;
+            padding: 0 40px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-radius: 0 0 20px 20px;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 50px;
+            height: 80px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .logo img {
+            height: 65px;
+            width: auto;
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-link {
+            font-family: 'DirectSans', sans-serif;
+            color: #1a4d3a;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            padding: 10px 20px;
+            position: relative;
+            transition: all 0.3s ease;
+            border-radius: 25px;
+        }
+
+        .nav-link::after {
+            display: none;
+        }
+
+        .nav-link.active {
+            color: #004033;
+            background-color: #cbdc4d;
+            font-weight: 600;
+        }
+
+        .nav-link:not(.active):hover {
+            color: #004033;
+        }
+
+        .nav-link.active:hover {
+            background-color: #b8c93f;
+            color: #004033;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 40px;
+        }
+
+        .form-container {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .page-title {
+            font-family: 'DirectSans', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a4d3a;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-family: 'DirectSans', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a4d3a;
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-family: 'DirectSans', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        .form-group label .required {
+            color: #e74c3c;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-group input,
+        .form-group select {
+            font-family: 'DirectSans', sans-serif;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 400;
+            transition: all 0.3s;
+            background-color: #fff;
+            width: 100%;
+        }
+
+        .form-group input:disabled {
+            background-color: #f5f5f5;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .autocomplete-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background-color: #fff;
+            border: 2px solid #e0e0e0;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .autocomplete-dropdown.show {
+            display: block;
+        }
+
+        .autocomplete-item {
+            padding: 12px 15px;
+            cursor: pointer;
+            font-family: 'DirectSans', sans-serif;
+            font-size: 16px;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background-color 0.2s;
+        }
+
+        .autocomplete-item:last-child {
+            border-bottom: none;
+        }
+
+        .autocomplete-item:hover,
+        .autocomplete-item.selected {
+            background-color: #cbdc4d;
+            color: #004033;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #cbdc4d;
+            box-shadow: 0 0 0 3px rgba(203, 220, 77, 0.2);
+        }
+
+        .date-input-wrapper {
+            position: relative;
+        }
+
+        .date-input-wrapper input {
+            padding-right: 40px;
+        }
+
+        .date-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: #999;
+        }
+
+        /* Results */
+        .results-section {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 12px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .result-row:last-child {
+            border-bottom: none;
+        }
+
+        .result-label-wrapper {
+            flex: 1;
+        }
+
+        .result-label {
+            font-family: 'DirectSans', sans-serif;
+            font-size: 16px;
+            font-weight: 400;
+            color: #555;
+        }
+
+        .result-value-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            text-align: right;
+        }
+
+        .result-value {
+            font-family: 'DirectSans', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a4d3a;
+        }
+
+        .result-note {
+            font-family: 'DirectSans', sans-serif;
+            font-size: 12px;
+            font-weight: 400;
+            color: #666;
+            font-style: italic;
+            margin-top: 4px;
+        }
+
+        .btn-calculate {
+            font-family: 'DirectSans', sans-serif;
+            background-color: #cbdc4d;
+            color: #004033;
+            padding: 14px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .btn-calculate:hover {
+            background-color: #b8c93f;
+        }
+
+        .footer-text {
+            font-family: 'DirectSans', sans-serif;
+            font-size: 12px;
+            font-weight: 400;
+            color: #999;
+            line-height: 1.6;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                padding: 0 20px;
+            }
+
+            .header-content {
+                height: 70px;
+                gap: 20px;
+            }
+
+            .logo img {
+                height: 52px;
+            }
+
+            .header-nav {
+                gap: 15px;
+            }
+
+            .nav-link {
+                font-size: 14px;
+            }
+
+            .main-content {
+                padding: 0 20px;
+                margin: 20px auto;
+            }
+
+            .form-container {
+                padding: 25px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <img src="Loga/Logo+pozitivní+RGB.png" alt="Direct pojišťovna">
+            </a>
+            <nav class="header-nav">
+                <a href="index.html" class="nav-link">Ceník vozidel</a>
+                <a href="vypocet.html" class="nav-link active">Výpočet půjčovného</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="form-container">
+            <h1 class="page-title">Výpočet půjčovného za náhradní vozidlo</h1>
+
+            <form id="calculationForm">
+                <!-- Poškozené vozidlo -->
+                <div class="form-section">
+                    <h2 class="section-title">Poškozené vozidlo</h2>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Rok uvedení do provozu <span class="required">*</span></label>
+                            <input type="text" id="rokProvozu" placeholder="Vyberte rok" autocomplete="off" required>
+                            <div class="autocomplete-dropdown" id="rokProvozuDropdown"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>Značka</label>
+                            <input type="text" id="znackaPoskozene" placeholder="Vyberte značku" autocomplete="off">
+                            <div class="autocomplete-dropdown" id="znackaPoskozeneDropdown"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>Model</label>
+                            <input type="text" id="modelPoskozene" placeholder="Vyberte model" autocomplete="off">
+                            <div class="autocomplete-dropdown" id="modelPoskozeneDropdown"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pronajímané vozidlo -->
+                <div class="form-section">
+                    <h2 class="section-title">Pronajímané vozidlo</h2>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Pronájem vozidla od <span class="required">*</span></label>
+                            <div class="date-input-wrapper">
+                                <input type="date" id="datumPronajmu" required>
+                                <span class="date-icon">📅</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Značka</label>
+                            <input type="text" id="znackaPronajmene" placeholder="Vyberte značku" autocomplete="off">
+                            <div class="autocomplete-dropdown" id="znackaPronajmeneDropdown"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>Model</label>
+                            <input type="text" id="modelPronajmene" placeholder="Vyberte model" autocomplete="off">
+                            <div class="autocomplete-dropdown" id="modelPronajmeneDropdown"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results -->
+                <div class="results-section" id="resultsSection" style="display: none;">
+                    <div class="result-row">
+                        <div class="result-label-wrapper">
+                            <span class="result-label">Náhrada za 1 den za pronájem 1-10 dní</span>
+                        </div>
+                        <div class="result-value-wrapper">
+                            <span class="result-value" id="cenaDo14">-</span>
+                            <span class="result-note" id="noteDo14"></span>
+                        </div>
+                    </div>
+                    <div class="result-row">
+                        <div class="result-label-wrapper">
+                            <span class="result-label">Náhrada za 1 den za pronájem 11-30 dní</span>
+                        </div>
+                        <div class="result-value-wrapper">
+                            <span class="result-value" id="cenaNad14">-</span>
+                            <span class="result-note" id="noteNad14"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" class="btn-calculate" id="calculateBtn">Přepočítat</button>
+            </form>
+
+            <div class="footer-text">
+                Všechny denní sazby jsou bez odpočtu pevných nákladů (z této částky už tedy nebudeme odečítat náklady za opotřebení poškozeného vozidla).<br>
+                Ceny nezahrnují pohonné hmoty a případnou spoluúčast za poškození vozidla.<br>
+                Pokud je vaše poškozené auto starší než 8 let, sazba za půjčení náhradního auta se o jednu třídu sníží.<br>
+                Cenu půjčovného nad 30 dní je nutné konzultovat s likvidátorem dané škodní události.
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Data from price list
+        const cenÝkData = [
+          {
+            "kategorie": "vozy Škoda",
+            "znacka_typ": "Citigo",
+            "cena_1_10_dni": 500,
+            "cena_11_30_dni": 400
+          },
+          {
+            "kategorie": "vozy Škoda",
+            "znacka_typ": "Fabia + Roomster",
+            "cena_1_10_dni": 600,
+            "cena_11_30_dni": 480
+          },
+          {
+            "kategorie": "vozy Škoda",
+            "znacka_typ": "Rapid",
+            "cena_1_10_dni": 650,
+            "cena_11_30_dni": 520
+          },
+          {
+            "kategorie": "vozy Škoda",
+            "znacka_typ": "Scala + Kamiq + Yeti",
+            "cena_1_10_dni": 750,
+            "cena_11_30_dni": 600
+          },
+          {
+            "kategorie": "vozy Škoda",
+            "znacka_typ": "Octavia I + II",
+            "cena_1_10_dni": 600,
+            "cena_11_30_dni": 480
+          },
+          {
+            "kategorie": "vozy Škoda",
+            "znacka_typ": "Octavia III + IV",
+            "cena_1_10_dni": 1000,
+            "cena_11_30_dni": 800
+          },
+          {
+            "kategorie": "vozy Škoda",
+            "znacka_typ": "Karoq + Elroq",
+            "cena_1_10_dni": 1100,
+            "cena_11_30_dni": 880
+          },
+          {
+            "kategorie": "vozy Škoda",
+            "znacka_typ": "Superb",
+            "cena_1_10_dni": 1200,
+            "cena_11_30_dni": 960
+          },
+          {
+            "kategorie": "vozy Škoda",
+            "znacka_typ": "Kodiaq + Enyaq",
+            "cena_1_10_dni": 1350,
+            "cena_11_30_dni": 1080
+          },
+          {
+            "kategorie": "Mini",
+            "znacka_typ": "Citroën C1, Fiat 500 + Panda, Ford KA, Hyundai i10, Chevrolet Spark, Kia Picanto, Opel Adam + Agila, Peugeot 107 + 108, Renault Twingo, Seat Mii, Smart Fortwo, Suzuki Alto + Celerio + Splash, Toyota Aygo, Volkswagen UP!",
+            "cena_1_10_dni": 550,
+            "cena_11_30_dni": 440
+          },
+          {
+            "kategorie": "Malá ",
+            "znacka_typ": "Alfa Romeo MiTo, Citroën C3, DS 3, Fiat Punto, Ford Fiesta + Fusion, Honda Jazz, Hyundai i20 + Getz, Chevrolet Aveo + Kalos, Kia Rio + Soul, Mazda 2, Mitsubishi Colt, Nissan Micra, Opel Corsa, Peugeot 206 + 207 + 208, Renault Clio + Thalia, Seat Cordoba + Ibiza, Subaru Justy, Smart ForFour, Suzuki Swift, Toyota Yaris, Volkswagen Polo, Dacia Sandero + Logan",
+            "cena_1_10_dni": 700,
+            "cena_11_30_dni": 560
+          },
+          {
+            "kategorie": "Malá premium",
+            "znacka_typ": "Audi A1, Mini Cooper",
+            "cena_1_10_dni": 900,
+            "cena_11_30_dni": 720
+          },
+          {
+            "kategorie": "Nižší střední",
+            "znacka_typ": "Alfa Romeo 147 + Giulietta, Fiat Bravo +Tipo, Citroën C4 + C-Elysée, Cupra Leon, DS 4, Ford Focus, Honda Civic, Hyundai Accent + Elantra + i30, Chevrolet Cruze, Kia Ceed, Mazda 3, Mitsubishi Lancer, Nissan Almera, Opel Astra, Peugeot 301 + 307 + 308, Renault Megane + Fluence, Seat Leon + Toledo, Subaru Impreza, Toyota Auris + Corolla + Prius, Volvo C30 + V40, Volkswagen Golf + New Beetle",
+            "cena_1_10_dni": 900,
+            "cena_11_30_dni": 720
+          },
+          {
+            "kategorie": "Nižší střední premium",
+            "znacka_typ": "Audi A3, BMW 1 + 2, Mercedes Benz A, Lexus CT, Mini Clubman",
+            "cena_1_10_dni": 1200,
+            "cena_11_30_dni": 960
+          },
+          {
+            "kategorie": "Střední",
+            "znacka_typ": "Alfa Romeo 159 + Giulia, Citroën C5, Dodge Caliber, Fiat Croma, Ford Mondeo, Hyundai i40 + Sonata, Kia Optima,\nMazda 6, Opel Insignia + Vectra, Peugeot 406 + 407 + 508, Renault Talisman + Laguna, Seat Exeo, Subaru Legacy + Levorg, Toyota Avensis + Camry, Volkswagen Passat + CC, Tesla Model 3",
+            "cena_1_10_dni": 1200,
+            "cena_11_30_dni": 960
+          },
+          {
+            "kategorie": "Střední premium",
+            "znacka_typ": "Audi A4 + A5, BMW 3 + 4, Jaguar XE, Mercedes-Benz C + CLA, Lexus IS, Volvo S60 + V60 + V70, Hyundai IONIQ 5+6",
+            "cena_1_10_dni": 1500,
+            "cena_11_30_dni": 1200
+          },
+          {
+            "kategorie": "Vyšší střední",
+            "znacka_typ": "Citroën C6, DS 9, Honda Legend, Hyundai Genesis, Peugeot 607,",
+            "cena_1_10_dni": 1500,
+            "cena_11_30_dni": 1200
+          },
+          {
+            "kategorie": "Vyšší střední premium",
+            "znacka_typ": "Audi A6 + A7, BMW 5 + 6, Jaguar XF, Maserati Ghibli, Mercedes-Benz E + CLS, Volvo S90 + V90, Volkswagen Arteon,",
+            "cena_1_10_dni": 2100,
+            "cena_11_30_dni": 1680
+          },
+          {
+            "kategorie": "Luxusní",
+            "znacka_typ": "Audi A8, BMW 7 + 8, Jaguar XJ + XK, Lexus LS, Mercedes Benz S, Porsche Panamera, Volkswagen Phaeton, Tesla Model S",
+            "cena_1_10_dni": 2800,
+            "cena_11_30_dni": 2240
+          },
+          {
+            "kategorie": "MPV malá",
+            "znacka_typ": "Citroën C3 Picasso, Fiat 500L + Qubo, Ford B-MAX + C-MAX, Hyundai ix20, Kia Venga, Opel Meriva, Renault Kangoo, Toyota Urban Cruiser + Verso, Dacia Jogger + Logan MCV,",
+            "cena_1_10_dni": 800,
+            "cena_11_30_dni": 640
+          },
+          {
+            "kategorie": "MPV střední",
+            "znacka_typ": "Citroën C4 SpaceTourer + Grand Picasso + C4 Picasso + Xsara Picasso + Berlingo, Ford Grand C-max, Chevrolet Orlando, Mazda 5, Opel Zafira, Peugeot Rifter, Renault Scénic + Grand Scénic, Seat Altea, Toytoa Verso, Volkswagen Golf Sports VAN + Touran + Caddy, BMW 2 Tourer, Mercedes-Benz B + Citan, Fiat Doblo",
+            "cena_1_10_dni": 1000,
+            "cena_11_30_dni": 800
+          },
+          {
+            "kategorie": "MPV velká",
+            "znacka_typ": "Citroën Jumpy + C8, Ford S-MAX + Galaxy, Mercedes-Benz Viano, Peugeot 807, Renault Espace, Seat Alhambra, Volkswagen Sharan, Chrysler Voyager, Peugeot Expert",
+            "cena_1_10_dni": 1400,
+            "cena_11_30_dni": 1120
+          },
+          {
+            "kategorie": "SUV malé ",
+            "znacka_typ": "Baic X3, Dacia Duster + Bigster, SsangYong Tivoli, MG ZS, Citroën C3 Aircross + C4 Aircross + Cactus, DS3 Crossback, Fiat 500X, Ford Ecosport, Honda HRV, Hyundai Bayon + Kona, Jeep Renegade, Kia XCeed + Soul + Stonic + Niro, Mazda CX-3, Mitsubishi ASX, Nissan Juke, Opel Crossland X + Mokka, Peugeot 2008, Renault Captur + Arkana, Seat Arona + Ateca (Cupra), Suzuki Jimny + SX4 + S-Cross + Vitara,  Toyota C-HR + Yaris Cross, Volkswagen Taigo + T-Cross + T-Roc",
+            "cena_1_10_dni": 850,
+            "cena_11_30_dni": 680
+          },
+          {
+            "kategorie": "SUV malé premium ",
+            "znacka_typ": "Mercedes-Benz GLA, Volvo XC40, Baic X5",
+            "cena_1_10_dni": 1200,
+            "cena_11_30_dni": 960
+          },
+          {
+            "kategorie": "SUV střední ",
+            "znacka_typ": "Alfa Romeo Stelvio + Tonale, Baic X7, SsangYong Korando, MG HS + EHS (hybrid), Citroën C-Crosser, Cupra Formentor, DS 7, Fiat Freemont, Ford Edge + Kuga, Honda CR-V, Hyundai ix35 + Tucson, Chevrolet Captiva, Jeep Compass + Cherokee, Kia Sportage + EV3, Mazda CX-5 + CX30, Mitsubishi Eclipse + Outlander, Nissan Quasqai + X-trail, Opel Grandland X, Peugeot 3008 + 5008, Renault Austral + Koleos + Kadjar + Rafale, Seat Tarraco, Subaru Forester + XV, Suzuki Grand Vitara, Toyota RAV4, Volkswagen Tiguan, Jaecoo 7",
+            "cena_1_10_dni": 1350,
+            "cena_11_30_dni": 1080
+          },
+          {
+            "kategorie": "SUV střední premium",
+            "znacka_typ": "Audi Q2 + Q3, BMW X1 + X2, Land Rover Evoque + Defender, Mercedes-Benz ML + GLB, Porsche Macan, Volvo XC60 + XC70, Tesla Model Y, Leapmotor C10",
+            "cena_1_10_dni": 1500,
+            "cena_11_30_dni": 1200
+          },
+          {
+            "kategorie": "SUV velké ",
+            "znacka_typ": "Ford Explorer, Hyundai Santa-Fe, Jeep Wrangler, KIA Sorento, Nissan Pathfinder + Patrol, Mitsubishi Pajero, Nissan X-Trail, Toyota Highlander, SsangYong Rexton, Kia EV6",
+            "cena_1_10_dni": 1800,
+            "cena_11_30_dni": 1440
+          },
+          {
+            "kategorie": "SUV velké premium",
+            "znacka_typ": "Audi Q5, BMW X3 + X4, Jeep Grand Cherokee, Land Rover Discovery + Range Rover Velar, Mercedes-Benz GLC, Volvo XC90, Volkswagen Touareg, Lexus RX, Kia EV9",
+            "cena_1_10_dni": 2300,
+            "cena_11_30_dni": 1840
+          },
+          {
+            "kategorie": "Luxusní SUV",
+            "znacka_typ": "Audi Q7 + Q8, BMW X5 + X6 + X7, Infiniti FX, Land Rover Range Rover, Mercedes-Benz G + GL + GLE + GLS, Porsche Cayenne, Toyota Land Cruiser, Tesla Model X, Hyundai IONIQ 9",
+            "cena_1_10_dni": 2750,
+            "cena_11_30_dni": 2200
+          },
+          {
+            "kategorie": "Užitková malá",
+            "znacka_typ": "Citroën Berlingo + Nemo, Dacia Dokker + Lodgy, Fiat Doblo + Fiorino, Ford Transit Connect, Opel Combo, Peugeot Bipper + Partner + Rifter, Renault Kangoo, Volkswagen Caddy",
+            "cena_1_10_dni": 800,
+            "cena_11_30_dni": 640
+          },
+          {
+            "kategorie": "Užitková střední",
+            "znacka_typ": "Citroën Jumpy, Fiat Talento, Ford Transit Custom, Hyundai H-1 Van, Mercedes-Benz Vito, Nissan NV200, Opel Vivaro, Peugeot Expert, Renault Trafic, Volkswagen Transporter, Kia PV5 Cargo,",
+            "cena_1_10_dni": 1000,
+            "cena_11_30_dni": 800
+          },
+          {
+            "kategorie": "Užitková velká",
+            "znacka_typ": "Citroën Jumper, Fiat Ducato, Ford Transit, Hyundai H350, Iveco Daily, Mercedes-Benz Sprinter, Opel Movano, Peugeot Boxer, Renault Master, Volkswagen Crafter",
+            "cena_1_10_dni": 1200,
+            "cena_11_30_dni": 960
+          },
+          {
+            "kategorie": "Pick - up",
+            "znacka_typ": "Ford Ranger, Isuzu D-Max, Mazda BT, Mitsubishi L200, Mercedes-Benz X, Nissan Navara + NP300, Toyota Hilux, Volkswagen Amarok, Tesla Cybertruck",
+            "cena_1_10_dni": 1500,
+            "cena_11_30_dni": 1200
+          },
+          {
+            "kategorie": "Mikrobus",
+            "znacka_typ": "Citroën Spacetourer + Jumper Bus, Fiat Ducato Minibus, Mercedes-Benz Vito + V, Peugeot Traveller, Volkswagen California + Caravelle + Crafter + Multivan, Hyundai Staria, Toyota Proace Verso, Kia PV5 Passenger",
+            "cena_1_10_dni": 1500,
+            "cena_11_30_dni": 1200
+          }
+        ];
+
+        // Vehicle brands list
+        const vehicleBrands = [
+            'Alfa Romeo', 'Audi', 'Baic', 'BMW', 'Chevrolet', 'Chrysler', 'Citroën', 'Cupra', 
+            'Dacia', 'Dodge', 'DS', 'Fiat', 'Ford', 'Honda', 'Hyundai', 'Infiniti', 'Isuzu', 
+            'Iveco', 'Jaguar', 'Jaecoo', 'Jeep', 'Kia', 'Land Rover', 'Leapmotor', 'Lexus', 'Maserati', 'Mazda', 
+            'Mercedes-Benz', 'MG', 'Mini', 'Mitsubishi', 'Nissan', 'Opel', 'Peugeot', 'Porsche', 
+            'Renault', 'Seat', 'Škoda', 'Smart', 'SsangYong', 'Subaru', 'Suzuki', 'Tesla', 
+            'Toyota', 'Volkswagen', 'Volvo'
+        ];
+
+        // Extract unique models and categories, and create brand-to-models mapping
+        function extractBrandsAndModels() {
+            const models = new Set();
+            const categories = new Set();
+            const brandToModels = {}; // Map brand -> Set of models
+            const extractedBrands = new Set(); // Track all brands found in data
+
+            // Initialize brand maps with known brands
+            vehicleBrands.forEach(brand => {
+                brandToModels[brand] = new Set();
+            });
+
+            // Helper function to normalize brand name (handle variations like Mercedes-Benz vs Mercedes Benz)
+            function normalizeBrand(brandName) {
+                // Replace common variations
+                return brandName
+                    .replace(/-/g, ' ')
+                    .replace(/\s+/g, ' ')
+                    .trim();
+            }
+
+            // Helper function to find matching brand (case-insensitive, handles variations)
+            function findMatchingBrand(part) {
+                const partLower = part.toLowerCase();
+                
+                // Try exact match first
+                for (const brand of vehicleBrands) {
+                    const brandLower = brand.toLowerCase();
+                    const brandNormalized = normalizeBrand(brand).toLowerCase();
+                    const partNormalized = normalizeBrand(part).toLowerCase();
+                    
+                    // Check if part starts with brand name (with space after)
+                    if (partLower.startsWith(brandLower + ' ') || 
+                        partNormalized.startsWith(brandNormalized + ' ') ||
+                        partLower === brandLower) {
+                        return brand;
+                    }
+                }
+                
+                // If no exact match, try to extract brand from beginning of part
+                // Look for known brand patterns at the start
+                for (const brand of vehicleBrands) {
+                    const brandLower = brand.toLowerCase();
+                    const brandWords = brandLower.split(/\s+/);
+                    const partWords = partLower.split(/\s+/);
+                    
+                    // Check if first word(s) match brand
+                    let matches = true;
+                    for (let i = 0; i < brandWords.length && i < partWords.length; i++) {
+                        if (partWords[i] !== brandWords[i]) {
+                            matches = false;
+                            break;
+                        }
+                    }
+                    
+                    if (matches && partWords.length > brandWords.length) {
+                        // Check if next word is not a brand (it should be a model)
+                        return brand;
+                    }
+                }
+                
+                return null;
+            }
+
+            cenÝkData.forEach(item => {
+                if (item.kategorie) categories.add(item.kategorie);
+                
+                const znackaTyp = item.znacka_typ;
+                
+                // Special handling for "vozy Škoda" category
+                if (item.kategorie && item.kategorie.toLowerCase().includes('škoda')) {
+                    // For Škoda, znacka_typ contains only models (e.g., "Citigo", "Fabia + Roomster", "Octavia I + II", "Octavia III + IV")
+                    
+                    // First check if the entire string is a version pattern like "Octavia I + II" or "Octavia III + IV"
+                    const fullVersionPattern = /^([A-Za-z\s]+)\s+([IVX]+)\s*\+\s*([IVX]+)$/i;
+                    const fullVersionMatch = znackaTyp.match(fullVersionPattern);
+                    
+                    if (fullVersionMatch) {
+                        // It's a full version pattern like "Octavia I + II" or "Octavia III + IV"
+                        // Extract both versions: "Octavia I" and "Octavia II"
+                        const baseModel = fullVersionMatch[1].trim();
+                        const version1 = fullVersionMatch[2].trim();
+                        const version2 = fullVersionMatch[3].trim();
+                        
+                        if (baseModel && baseModel.length > 0 && baseModel.length < 30) {
+                            // Add both versions
+                            const model1 = (baseModel + ' ' + version1).trim();
+                            const model2 = (baseModel + ' ' + version2).trim();
+                            
+                            if (model1.length > 0 && model1.length < 30) {
+                                models.add(model1);
+                                brandToModels['Škoda'].add(model1);
+                            }
+                            if (model2.length > 0 && model2.length < 30) {
+                                models.add(model2);
+                                brandToModels['Škoda'].add(model2);
+                            }
+                        }
+                    } else {
+                        // Regular models separated by + (e.g., "Fabia + Roomster", "Scala + Kamiq + Yeti")
+                        const skodaModels = znackaTyp.split('+').map(m => m.trim());
+                        skodaModels.forEach(model => {
+                            if (model && model.length > 0) {
+                                // Check if it's a single version like "Octavia II" or "Octavia IV"
+                                // Pattern: word(s) followed by space and roman numeral
+                                const singleVersionPattern = /^([A-Za-z\s]+)\s+([IVX]+)$/i;
+                                const singleVersionMatch = model.match(singleVersionPattern);
+                                
+                                if (singleVersionMatch) {
+                                    // It's a single version like "Octavia II" - keep full name
+                                    const fullModel = model.trim();
+                                    if (fullModel && fullModel.length > 0 && fullModel.length < 30) {
+                                        models.add(fullModel);
+                                        brandToModels['Škoda'].add(fullModel);
+                                    }
+                                } else {
+                                    // Regular model name (e.g., "Citigo", "Fabia", "Roomster")
+                                    // But skip if it's just a roman numeral (I, II, III, IV, etc.)
+                                    const isRomanNumeral = /^[IVX]+$/i.test(model.trim());
+                                    if (!isRomanNumeral) {
+                                        const cleanModel = model.trim();
+                                        if (cleanModel && cleanModel.length > 0 && cleanModel.length < 30) {
+                                            models.add(cleanModel);
+                                            brandToModels['Škoda'].add(cleanModel);
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    }
+                } else {
+                    // For other categories, znacka_typ contains "Brand Model" format
+                    // Split by comma to get individual entries (e.g., "Audi Q5, BMW X3 + X4")
+                    const parts = znackaTyp.split(',');
+                    
+                    parts.forEach(part => {
+                        part = part.trim();
+                        if (!part || part.length === 0) return;
+                        
+                        // Find matching brand
+                        const matchedBrand = findMatchingBrand(part);
+                        
+                        if (matchedBrand) {
+                            extractedBrands.add(matchedBrand);
+                            
+                            // Initialize brand map if not exists
+                            if (!brandToModels[matchedBrand]) {
+                                brandToModels[matchedBrand] = new Set();
+                            }
+                            
+                            // Extract models after brand name
+                            // Find where brand name ends in the part
+                            const brandLower = matchedBrand.toLowerCase();
+                            const partLower = part.toLowerCase();
+                            let brandEndIndex = matchedBrand.length;
+                            
+                            // Try to find exact match position
+                            if (partLower.startsWith(brandLower + ' ')) {
+                                brandEndIndex = matchedBrand.length;
+                            } else {
+                                // Try normalized match (handle Mercedes-Benz vs Mercedes Benz)
+                                const normalizedBrand = normalizeBrand(matchedBrand).toLowerCase();
+                                const normalizedPart = normalizeBrand(part).toLowerCase();
+                                if (normalizedPart.startsWith(normalizedBrand + ' ')) {
+                                    // Find actual position in original string
+                                    // Count words in brand and find where they end in part
+                                    const brandWords = matchedBrand.split(/\s+/);
+                                    const partWords = part.split(/\s+/);
+                                    let wordCount = 0;
+                                    for (let i = 0; i < brandWords.length && i < partWords.length; i++) {
+                                        if (normalizeBrand(partWords[i]).toLowerCase() === normalizeBrand(brandWords[i]).toLowerCase()) {
+                                            wordCount++;
+                                        } else {
+                                            break;
+                                        }
+                                    }
+                                    if (wordCount === brandWords.length) {
+                                        // Calculate position after brand words
+                                        brandEndIndex = 0;
+                                        for (let i = 0; i < wordCount; i++) {
+                                            brandEndIndex += partWords[i].length;
+                                            if (i < wordCount - 1) brandEndIndex += 1; // space
+                                        }
+                                    }
+                                } else {
+                                    // Fallback: try to find brand by matching words
+                                    const brandWords = matchedBrand.split(/\s+/);
+                                    const partWords = part.split(/\s+/);
+                                    let wordCount = 0;
+                                    for (let i = 0; i < brandWords.length && i < partWords.length; i++) {
+                                        const brandWordNorm = normalizeBrand(brandWords[i]).toLowerCase();
+                                        const partWordNorm = normalizeBrand(partWords[i]).toLowerCase();
+                                        if (partWordNorm === brandWordNorm) {
+                                            wordCount++;
+                                        } else {
+                                            break;
+                                        }
+                                    }
+                                    if (wordCount === brandWords.length) {
+                                        // Calculate position after brand words
+                                        brandEndIndex = 0;
+                                        for (let i = 0; i < wordCount; i++) {
+                                            brandEndIndex += partWords[i].length;
+                                            if (i < wordCount - 1) brandEndIndex += 1; // space
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            const afterBrand = part.substring(brandEndIndex).trim();
+                            if (afterBrand && afterBrand.length > 0) {
+                                // Split by + to get multiple models (e.g., "S60 + V60 + V70" or "X3 + X4")
+                                const modelParts = afterBrand.split('+');
+                                modelParts.forEach(modelPart => {
+                                    modelPart = modelPart.trim();
+                                    if (modelPart && modelPart.length > 0 && modelPart.length < 30) {
+                                        // Clean model name - remove parentheses content, but keep the model name
+                                        let cleanModel = modelPart.replace(/\s*\([^)]*\)/g, '').trim();
+                                        // Remove trailing commas
+                                        cleanModel = cleanModel.replace(/,\s*$/, '').trim();
+                                        if (cleanModel && cleanModel.length > 0) {
+                                            models.add(cleanModel);
+                                            brandToModels[matchedBrand].add(cleanModel);
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+
+            // Convert Sets to Arrays and sort
+            const brandToModelsArray = {};
+            Object.keys(brandToModels).forEach(brand => {
+                brandToModelsArray[brand] = Array.from(brandToModels[brand])
+                    .filter(m => m.length > 0 && m.length < 30)
+                    .sort();
+            });
+
+            // Combine extracted brands with known brands, remove duplicates
+            const allBrands = Array.from(new Set([...vehicleBrands, ...extractedBrands])).sort();
+
+            return {
+                brands: allBrands,
+                models: Array.from(models).filter(m => m.length > 0 && m.length < 30).sort(),
+                categories: Array.from(categories).sort(),
+                brandToModels: brandToModelsArray
+            };
+        }
+
+        // Autocomplete functionality
+        function initAutocomplete(inputId, dropdownId, options, optionsGetter = null) {
+            const input = document.getElementById(inputId);
+            const dropdown = document.getElementById(dropdownId);
+            let selectedIndex = -1;
+            let currentOptions = options;
+
+            // Function to update options dynamically
+            function updateOptions(newOptions) {
+                currentOptions = newOptions;
+            }
+
+            // Store update function on input element for external access
+            input.updateAutocompleteOptions = updateOptions;
+
+            function showOptions(filterValue = '') {
+                // Use optionsGetter if provided (for dynamic options), otherwise use currentOptions
+                const availableOptions = optionsGetter ? optionsGetter() : currentOptions;
+                
+                const filtered = filterValue 
+                    ? availableOptions.filter(option => 
+                        option.toLowerCase().startsWith(filterValue.toLowerCase())
+                      )
+                    : availableOptions;
+
+                if (filtered.length === 0) {
+                    dropdown.classList.remove('show');
+                    return;
+                }
+
+                dropdown.innerHTML = '';
+                filtered.forEach((option, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'autocomplete-item';
+                    item.textContent = option;
+                    item.addEventListener('click', () => {
+                        input.value = option;
+                        dropdown.classList.remove('show');
+                        input.focus();
+                        
+                        // Trigger input event to enable model field if this is a brand input
+                        const inputEvent = new Event('input', { bubbles: true });
+                        input.dispatchEvent(inputEvent);
+                    });
+                    dropdown.appendChild(item);
+                });
+
+                dropdown.classList.add('show');
+                selectedIndex = -1;
+            }
+
+            // Show all options when input is focused (always show dropdown, even if value exists)
+            input.addEventListener('focus', () => {
+                // Always show all options when focused, regardless of current value
+                showOptions('');
+            });
+
+            // Filter options when typing
+            input.addEventListener('input', (e) => {
+                showOptions(e.target.value);
+            });
+
+            input.addEventListener('keydown', (e) => {
+                const items = dropdown.querySelectorAll('.autocomplete-item');
+                
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    selectedIndex = Math.min(selectedIndex + 1, items.length - 1);
+                    items.forEach((item, i) => {
+                        item.classList.toggle('selected', i === selectedIndex);
+                    });
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    selectedIndex = Math.max(selectedIndex - 1, -1);
+                    items.forEach((item, i) => {
+                        item.classList.toggle('selected', i === selectedIndex);
+                    });
+                } else if (e.key === 'Enter' && selectedIndex >= 0) {
+                    e.preventDefault();
+                    if (items[selectedIndex]) {
+                        input.value = items[selectedIndex].textContent;
+                        dropdown.classList.remove('show');
+                    }
+                } else if (e.key === 'Escape') {
+                    dropdown.classList.remove('show');
+                }
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!input.contains(e.target) && !dropdown.contains(e.target)) {
+                    dropdown.classList.remove('show');
+                }
+            });
+        }
+
+        // Generate years list from current year down to 1970
+        function generateYears() {
+            const currentYear = new Date().getFullYear();
+            const years = [];
+            for (let year = currentYear; year >= 1970; year--) {
+                years.push(year.toString());
+            }
+            return years;
+        }
+
+        // Populate dropdowns
+        function populateDropdowns() {
+            const { brands, models, categories, brandToModels } = extractBrandsAndModels();
+            const years = generateYears();
+
+            // Initialize autocomplete for brand inputs
+            initAutocomplete('znackaPoskozene', 'znackaPoskozeneDropdown', brands);
+            initAutocomplete('znackaPronajmene', 'znackaPronajmeneDropdown', brands);
+
+            // Initialize autocomplete for model inputs with dynamic options based on selected brand
+            const modelPoskozeneInput = document.getElementById('modelPoskozene');
+            const modelPronajmeneInput = document.getElementById('modelPronajmene');
+            
+            // Function to get models for "Poškozené vozidlo" based on selected brand
+            function getModelsForPoskozene() {
+                const selectedBrand = document.getElementById('znackaPoskozene').value.trim();
+                if (!selectedBrand) return [];
+                // Try to find matching brand (case-insensitive)
+                const matchingBrand = brands.find(b => b.toLowerCase() === selectedBrand.toLowerCase());
+                return matchingBrand && brandToModels[matchingBrand] ? brandToModels[matchingBrand] : [];
+            }
+
+            // Function to get models for "Pronajímané vozidlo" based on selected brand
+            function getModelsForPronajmene() {
+                const selectedBrand = document.getElementById('znackaPronajmene').value.trim();
+                if (!selectedBrand) return [];
+                // Try to find matching brand (case-insensitive)
+                const matchingBrand = brands.find(b => b.toLowerCase() === selectedBrand.toLowerCase());
+                return matchingBrand && brandToModels[matchingBrand] ? brandToModels[matchingBrand] : [];
+            }
+
+            initAutocomplete('modelPoskozene', 'modelPoskozeneDropdown', [], getModelsForPoskozene);
+            initAutocomplete('modelPronajmene', 'modelPronajmeneDropdown', [], getModelsForPronajmene);
+
+            // Initialize autocomplete for year input
+            initAutocomplete('rokProvozu', 'rokProvozuDropdown', years);
+
+            // Disable model inputs initially
+            modelPoskozeneInput.disabled = true;
+            modelPronajmeneInput.disabled = true;
+
+            // Enable model input when brand is selected
+            const znackaPoskozene = document.getElementById('znackaPoskozene');
+            const znackaPronajmene = document.getElementById('znackaPronajmene');
+
+            // Function to handle brand change for "Poškozené vozidlo"
+            function handleBrandChangePoskozene() {
+                const brandValue = znackaPoskozene.value.trim();
+                const modelDropdown = document.getElementById('modelPoskozeneDropdown');
+                
+                if (brandValue !== '') {
+                    modelPoskozeneInput.disabled = false;
+                    modelPoskozeneInput.value = ''; // Clear model when brand changes
+                    modelDropdown.classList.remove('show'); // Close model dropdown
+                } else {
+                    modelPoskozeneInput.disabled = true;
+                    modelPoskozeneInput.value = '';
+                    modelDropdown.classList.remove('show');
+                }
+            }
+
+            // Function to handle brand change for "Pronajímané vozidlo"
+            function handleBrandChangePronajmene() {
+                const brandValue = znackaPronajmene.value.trim();
+                const modelDropdown = document.getElementById('modelPronajmeneDropdown');
+                
+                if (brandValue !== '') {
+                    modelPronajmeneInput.disabled = false;
+                    modelPronajmeneInput.value = ''; // Clear model when brand changes
+                    modelDropdown.classList.remove('show'); // Close model dropdown
+                } else {
+                    modelPronajmeneInput.disabled = true;
+                    modelPronajmeneInput.value = '';
+                    modelDropdown.classList.remove('show');
+                }
+            }
+
+            // Listen for brand selection in "Poškozené vozidlo"
+            znackaPoskozene.addEventListener('input', handleBrandChangePoskozene);
+
+            // Listen for brand selection in "Pronajímané vozidlo"
+            znackaPronajmene.addEventListener('input', handleBrandChangePronajmene);
+
+            // Also check when autocomplete item is clicked
+            const znackaPoskozeneDropdown = document.getElementById('znackaPoskozeneDropdown');
+            const znackaPronajmeneDropdown = document.getElementById('znackaPronajmeneDropdown');
+
+            // Add event delegation for brand dropdown clicks
+            znackaPoskozeneDropdown.addEventListener('click', function(e) {
+                if (e.target.classList.contains('autocomplete-item')) {
+                    setTimeout(() => {
+                        handleBrandChangePoskozene();
+                    }, 50);
+                }
+            });
+
+            znackaPronajmeneDropdown.addEventListener('click', function(e) {
+                if (e.target.classList.contains('autocomplete-item')) {
+                    setTimeout(() => {
+                        handleBrandChangePronajmene();
+                    }, 50);
+                }
+            });
+        }
+
+        // Mapping table for Škoda models to VW equivalents and categories
+        const skodaVWMapping = [
+            { "skoda": "Škoda Citigo", "vw": "VW Up!", "kategorie": "Mini" },
+            { "skoda": "Škoda Fabia", "vw": "VW Polo", "kategorie": "Malá" },
+            { "skoda": "Škoda Scala", "vw": "VW Golf", "kategorie": "Nižší střední" },
+            { "skoda": "Škoda Octavia", "vw": "VW Golf", "kategorie": "Nižší střední" },
+            { "skoda": "Škoda Superb", "vw": "VW Passat", "kategorie": "Střední" },
+            { "skoda": "Škoda Karoq", "vw": "VW T-Roc", "kategorie": "SUV malé" },
+            { "skoda": "Škoda Kodiaq", "vw": "VW Tiguan", "kategorie": "SUV velké" },
+            { "skoda": "Škoda Roomster", "vw": "VW Caddy", "kategorie": "MPV malá" },
+            { "skoda": "Škoda Yeti", "vw": "VW T-Roc", "kategorie": "SUV malé" }
+        ];
+
+        // Find category by brand and model
+        function findCategory(brand, model) {
+            if (!brand || !model) return null;
+            
+            const brandLower = brand.toLowerCase();
+            const modelLower = model.toLowerCase();
+            
+            // Special handling for Škoda - in "vozy Škoda" category, znacka_typ contains only models
+            if (brandLower === 'škoda' || brandLower === 'skoda') {
+                const item = cenÝkData.find(data => {
+                    if (data.kategorie && data.kategorie.toLowerCase().includes('škoda')) {
+                        const znackaTyp = data.znacka_typ.toLowerCase();
+                        
+                        // Check if znacka_typ contains the model
+                        // Handle cases like "Octavia I + II", "Octavia III + IV", "Fabia + Roomster"
+                        
+                        // First check if it's a version pattern like "Octavia I + II" or "Octavia III + IV"
+                        const fullVersionPattern = /^([a-z\s]+)\s+([ivx]+)\s*\+\s*([ivx]+)$/i;
+                        const fullVersionMatch = znackaTyp.match(fullVersionPattern);
+                        
+                        if (fullVersionMatch) {
+                            // It's a version pattern - check if model matches base name or any version
+                            const baseModel = fullVersionMatch[1].trim();
+                            const version1 = fullVersionMatch[2].trim();
+                            const version2 = fullVersionMatch[3].trim();
+                            
+                            // Check if model matches base name (e.g., "Octavia" matches "Octavia I + II")
+                            if (modelLower === baseModel) {
+                                return true;
+                            }
+                            
+                            // Check if model matches base + version1 (e.g., "Octavia I" matches "Octavia I + II")
+                            if (modelLower === (baseModel + ' ' + version1).trim()) {
+                                return true;
+                            }
+                            
+                            // Check if model matches base + version2 (e.g., "Octavia II" matches "Octavia I + II")
+                            if (modelLower === (baseModel + ' ' + version2).trim()) {
+                                return true;
+                            }
+                            
+                            // Also check if model contains base name and version (e.g., "Octavia IV" contains "Octavia" and "IV")
+                            if (modelLower.includes(baseModel)) {
+                                const modelVersion = modelLower.replace(baseModel, '').trim();
+                                if (modelVersion === version1 || modelVersion === version2) {
+                                    return true;
+                                }
+                            }
+                        } else {
+                            // Regular models separated by + (e.g., "Fabia + Roomster", "Scala + Kamiq + Yeti")
+                            const models = znackaTyp.split('+').map(m => m.trim().toLowerCase());
+                            
+                            // Check if any model matches
+                            if (models.some(m => {
+                                // Direct match
+                                if (m === modelLower) return true;
+                                // Check if model contains the model name (e.g., "Octavia II" contains "Octavia")
+                                if (modelLower.includes(m) || m.includes(modelLower)) return true;
+                                // Check if it's a version pattern in the model
+                                const singleVersionPattern = /^([a-z\s]+)\s+([ivx]+)$/i;
+                                const singleMatch = m.match(singleVersionPattern);
+                                if (singleMatch) {
+                                    const baseModel = singleMatch[1].trim();
+                                    const version = singleMatch[2].trim();
+                                    // Check if input model matches base + version
+                                    if (modelLower === (baseModel + ' ' + version).trim()) return true;
+                                    // Check if input model contains base and version
+                                    if (modelLower.includes(baseModel) && modelLower.includes(version)) return true;
+                                }
+                                return false;
+                            })) {
+                                return true;
+                            }
+                        }
+                    }
+                    return false;
+                });
+                
+                // For Škoda, always return category from ceník (not mapping)
+                // Mapping is only used for comparison when rental vehicle is different brand
+                if (item && item.kategorie) {
+                    return item.kategorie;
+                }
+                
+                return null;
+            }
+            
+            // For other brands, find item where znacka_typ contains both brand and model
+            const item = cenÝkData.find(data => {
+                const znackaTyp = data.znacka_typ.toLowerCase();
+                // Check if znacka_typ contains brand and model
+                // Handle cases like "Alfa Romeo Stelvio + Tonale" or "Peugeot 406 + 407 + 508"
+                const parts = znackaTyp.split(',');
+                
+                for (const part of parts) {
+                    const partTrimmed = part.trim();
+                    // Check if this part contains the brand
+                    if (partTrimmed.includes(brandLower)) {
+                        // Check if it also contains the model (could be separated by +)
+                        const models = partTrimmed.split('+').map(m => m.trim().toLowerCase());
+                        // Check if any model matches
+                        if (models.some(m => m.includes(modelLower) || modelLower.includes(m.replace(brandLower, '').trim()))) {
+                            return true;
+                        }
+                        // Also check direct match after brand name
+                        const afterBrand = partTrimmed.substring(partTrimmed.indexOf(brandLower) + brandLower.length).trim();
+                        if (afterBrand.toLowerCase().includes(modelLower)) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            });
+            
+            return item ? item.kategorie : null;
+        }
+
+        // Get category hierarchy for downgrading (ordered from lowest to highest)
+        const categoryHierarchy = [
+            'vozy Škoda',
+            'Mini',
+            'Malá',
+            'Malá ',
+            'Malá premium',
+            'Nižší střední',
+            'Nižší střední premium',
+            'Střední',
+            'Střední premium',
+            'Vyšší střední',
+            'Vyšší střední premium',
+            'Luxusní',
+            'MPV malá',
+            'MPV střední',
+            'MPV velká',
+            'SUV malé',
+            'SUV malé ',
+            'SUV malé premium',
+            'SUV malé premium ',
+            'SUV střední',
+            'SUV střední ',
+            'SUV střední premium',
+            'SUV velké',
+            'SUV velké ',
+            'SUV velké premium',
+            'Luxusní SUV',
+            'Užitková malá',
+            'Užitková střední',
+            'Užitková velká',
+            'Pick - up',
+            'Mikrobus'
+        ];
+
+        // Get lower category (one class down within the same vehicle type)
+        function getLowerCategory(category) {
+            if (!category) return null;
+            
+            const trimmedCategory = category.trim();
+            
+            // Category groups ordered from highest to lowest
+            const osobniVozy = [
+                'Luxusní',
+                'Vyšší střední premium',
+                'Vyšší střední',
+                'Střední premium',
+                'Střední',
+                'Nižší střední premium',
+                'Nižší střední',
+                'Malá premium',
+                'Malá',
+                'Malá ',
+                'Mini',
+                'vozy Škoda'
+            ];
+            
+            const suv = [
+                'Luxusní SUV',
+                'SUV velké premium',
+                'SUV velké',
+                'SUV velké ',
+                'SUV střední premium',
+                'SUV střední',
+                'SUV střední ',
+                'SUV malé premium',
+                'SUV malé premium ',
+                'SUV malé',
+                'SUV malé '
+            ];
+            
+            const mpv = [
+                'MPV velká',
+                'MPV střední',
+                'MPV malá'
+            ];
+            
+            const uzitkova = [
+                'Užitková velká',
+                'Užitková střední',
+                'Užitková malá'
+            ];
+            
+            // Special categories that cannot be downgraded
+            const special = ['Pick - up', 'Mikrobus'];
+            
+            // Helper function to find lower category in a group
+            function findLowerInGroup(category, group) {
+                // Try exact match
+                let index = group.indexOf(category);
+                if (index === -1) {
+                    // Try with trimmed
+                    const trimmed = category.trim();
+                    for (let i = 0; i < group.length; i++) {
+                        if (group[i].trim() === trimmed) {
+                            index = i;
+                            break;
+                        }
+                    }
+                }
+                
+                if (index === -1) return null;
+                if (index === group.length - 1) return null; // Already at lowest
+                return group[index + 1]; // Return next (lower) category
+            }
+            
+            // Check if category is in special group (cannot be downgraded)
+            if (special.includes(category) || special.some(s => s.trim() === trimmedCategory)) {
+                return null;
+            }
+            
+            // Try to find in osobní vozy group
+            let lower = findLowerInGroup(category, osobniVozy);
+            if (lower !== null) return lower;
+            
+            // Try with trimmed for osobní vozy
+            for (let i = 0; i < osobniVozy.length; i++) {
+                if (osobniVozy[i].trim() === trimmedCategory) {
+                    if (i < osobniVozy.length - 1) {
+                        return osobniVozy[i + 1];
+                    }
+                    return null;
+                }
+            }
+            
+            // Try to find in SUV group
+            lower = findLowerInGroup(category, suv);
+            if (lower !== null) return lower;
+            
+            // Try with trimmed for SUV
+            for (let i = 0; i < suv.length; i++) {
+                if (suv[i].trim() === trimmedCategory) {
+                    if (i < suv.length - 1) {
+                        return suv[i + 1];
+                    }
+                    return null;
+                }
+            }
+            
+            // Try to find in MPV group
+            lower = findLowerInGroup(category, mpv);
+            if (lower !== null) return lower;
+            
+            // Try with trimmed for MPV
+            for (let i = 0; i < mpv.length; i++) {
+                if (mpv[i].trim() === trimmedCategory) {
+                    if (i < mpv.length - 1) {
+                        return mpv[i + 1];
+                    }
+                    return null;
+                }
+            }
+            
+            // Try to find in Užitková group
+            lower = findLowerInGroup(category, uzitkova);
+            if (lower !== null) return lower;
+            
+            // Try with trimmed for Užitková
+            for (let i = 0; i < uzitkova.length; i++) {
+                if (uzitkova[i].trim() === trimmedCategory) {
+                    if (i < uzitkova.length - 1) {
+                        return uzitkova[i + 1];
+                    }
+                    return null;
+                }
+            }
+            
+            // Category not found in any group, return null
+            return null;
+        }
+
+        // Compare categories - returns 1 if category1 is higher, -1 if lower, 0 if equal
+        function compareCategories(category1, category2) {
+            if (!category1 || !category2) return 0;
+            
+            const index1 = categoryHierarchy.indexOf(category1);
+            const index2 = categoryHierarchy.indexOf(category2);
+            
+            // Try to find with trimmed comparison
+            let foundIndex1 = index1;
+            let foundIndex2 = index2;
+            
+            if (foundIndex1 === -1) {
+                const trimmed1 = category1.trim();
+                for (let i = 0; i < categoryHierarchy.length; i++) {
+                    if (categoryHierarchy[i].trim() === trimmed1) {
+                        foundIndex1 = i;
+                        break;
+                    }
+                }
+            }
+            
+            if (foundIndex2 === -1) {
+                const trimmed2 = category2.trim();
+                for (let i = 0; i < categoryHierarchy.length; i++) {
+                    if (categoryHierarchy[i].trim() === trimmed2) {
+                        foundIndex2 = i;
+                        break;
+                    }
+                }
+            }
+            
+            if (foundIndex1 === -1 || foundIndex2 === -1) return 0;
+            
+            if (foundIndex1 > foundIndex2) return 1; // category1 is higher
+            if (foundIndex1 < foundIndex2) return -1; // category1 is lower
+            return 0; // equal
+        }
+
+        // Find price by category (optionally with brand and model for "vozy Škoda")
+        function findPriceByCategory(category, brand, model) {
+            if (!category) return null;
+            
+            // Special handling for "vozy Škoda" - need to find specific model
+            if (category === 'vozy Škoda' && brand && model) {
+                const brandLower = brand.toLowerCase();
+                const modelLower = model.toLowerCase();
+                
+                if (brandLower === 'škoda' || brandLower === 'skoda') {
+                    const item = cenÝkData.find(data => {
+                        if (data.kategorie !== 'vozy Škoda') return false;
+                        const znackaTyp = data.znacka_typ.toLowerCase();
+                        
+                        // Check version patterns like "Octavia I + II"
+                        const fullVersionPattern = /^([a-z\s]+)\s+([ivx]+)\s*\+\s*([ivx]+)$/i;
+                        const fullVersionMatch = znackaTyp.match(fullVersionPattern);
+                        
+                        if (fullVersionMatch) {
+                            const baseModel = fullVersionMatch[1].trim();
+                            const version1 = fullVersionMatch[2].trim();
+                            const version2 = fullVersionMatch[3].trim();
+                            
+                            if (modelLower === baseModel ||
+                                modelLower === (baseModel + ' ' + version1).trim() ||
+                                modelLower === (baseModel + ' ' + version2).trim()) {
+                                return true;
+                            }
+                            
+                            if (modelLower.includes(baseModel)) {
+                                const modelVersion = modelLower.replace(baseModel, '').trim();
+                                if (modelVersion === version1 || modelVersion === version2) {
+                                    return true;
+                                }
+                            }
+                        } else {
+                            // Regular models separated by +
+                            const models = znackaTyp.split('+').map(m => m.trim().toLowerCase());
+                            if (models.some(m => {
+                                if (m === modelLower) return true;
+                                if (modelLower.includes(m) || m.includes(modelLower)) return true;
+                                const singleVersionPattern = /^([a-z\s]+)\s+([ivx]+)$/i;
+                                const singleMatch = m.match(singleVersionPattern);
+                                if (singleMatch) {
+                                    const baseModel = singleMatch[1].trim();
+                                    const version = singleMatch[2].trim();
+                                    if (modelLower === (baseModel + ' ' + version).trim()) return true;
+                                    if (modelLower.includes(baseModel) && modelLower.includes(version)) return true;
+                                }
+                                return false;
+                            })) {
+                                return true;
+                            }
+                        }
+                        return false;
+                    });
+                    
+                    if (item) {
+                        return {
+                            cena_1_10: item.cena_1_10_dni,
+                            cena_11_30: item.cena_11_30_dni,
+                            kategorie: item.kategorie
+                        };
+                    }
+                }
+            }
+            
+            // Find first item with matching category
+            const item = cenÝkData.find(data => data.kategorie === category);
+            return item ? {
+                cena_1_10: item.cena_1_10_dni,
+                cena_11_30: item.cena_11_30_dni,
+                kategorie: item.kategorie
+            } : null;
+        }
+
+        // Calculate
+        function calculate() {
+            // Get values from form
+            const rokProvozu = document.getElementById('rokProvozu').value;
+            const znackaPoskozene = document.getElementById('znackaPoskozene').value;
+            const modelPoskozene = document.getElementById('modelPoskozene').value;
+            const znackaPronajmene = document.getElementById('znackaPronajmene').value;
+            const modelPronajmene = document.getElementById('modelPronajmene').value;
+
+            // Validate required fields
+            if (!rokProvozu) {
+                alert('Prosím vyberte rok uvedení do provozu poškozeného vozidla');
+                return;
+            }
+
+            if (!modelPronajmene) {
+                alert('Prosím vyberte model pronajímaného vozidla');
+                return;
+            }
+
+            if (!znackaPronajmene) {
+                alert('Prosím vyberte značku pronajímaného vozidla');
+                return;
+            }
+
+            // Find category of rental vehicle
+            let rentalCategory = findCategory(znackaPronajmene, modelPronajmene);
+            
+            if (!rentalCategory) {
+                alert('Kategorie pro vybrané pronajímané vozidlo nebyla nalezena. Zkuste vybrat jiný model nebo značku.');
+                return;
+            }
+
+            // Find category of damaged vehicle (if brand and model are provided)
+            let damagedCategory = null;
+            let damagedCategoryForComparison = null; // Category for comparison (may use mapping)
+            
+            if (znackaPoskozene && modelPoskozene) {
+                const damagedBrandLower = znackaPoskozene.toLowerCase();
+                
+                // Check if damaged vehicle is Škoda
+                if (damagedBrandLower === 'škoda' || damagedBrandLower === 'skoda') {
+                    // For Škoda, get category from ceník (for pricing)
+                    damagedCategory = findCategory(znackaPoskozene, modelPoskozene);
+                    
+                    // But if rental vehicle is different brand, use mapping for comparison
+                    const rentalBrandLower = znackaPronajmene.toLowerCase();
+                    if (rentalBrandLower !== 'škoda' && rentalBrandLower !== 'skoda') {
+                        // Use mapping to get equivalent category for comparison
+                        const fullModelName = 'Škoda ' + modelPoskozene;
+                        const modelLower = modelPoskozene.toLowerCase();
+                        
+                        for (const mapping of skodaVWMapping) {
+                            const skodaModelLower = mapping.skoda.toLowerCase();
+                            
+                            // Check exact match
+                            if (skodaModelLower === fullModelName.toLowerCase()) {
+                                damagedCategoryForComparison = mapping.kategorie;
+                                break;
+                            }
+                            
+                            // Check if model name starts with mapped model
+                            if (fullModelName.toLowerCase().startsWith(skodaModelLower)) {
+                                damagedCategoryForComparison = mapping.kategorie;
+                                break;
+                            }
+                            
+                            // Check if mapped model contains the base model
+                            const baseModel = modelLower.split(' ')[0];
+                            const mappedBaseModel = skodaModelLower.replace('škoda ', '').split(' ')[0];
+                            
+                            if (baseModel === mappedBaseModel) {
+                                damagedCategoryForComparison = mapping.kategorie;
+                                break;
+                            }
+                        }
+                    } else {
+                        // Both are Škoda, use ceník category for comparison too
+                        damagedCategoryForComparison = damagedCategory;
+                    }
+                } else {
+                    // Not Škoda, use normal category finding
+                    damagedCategory = findCategory(znackaPoskozene, modelPoskozene);
+                    damagedCategoryForComparison = damagedCategory;
+                }
+            }
+
+            // Determine base category - client has right to same or lower class
+            // If rental vehicle is higher class than damaged vehicle, use damaged vehicle category as maximum
+            let baseCategory = rentalCategory;
+            let useDamagedVehiclePrice = false; // Flag to track if we should use damaged vehicle price
+            if (damagedCategoryForComparison) {
+                // Special handling: if both are "vozy Škoda", compare by price instead of category
+                if (rentalCategory === 'vozy Škoda' && damagedCategoryForComparison === 'vozy Škoda') {
+                    // Find prices for both vehicles
+                    const rentalPrice = findPriceByCategory(rentalCategory, znackaPronajmene, modelPronajmene);
+                    const damagedPrice = findPriceByCategory(damagedCategoryForComparison, znackaPoskozene, modelPoskozene);
+                    
+                    if (rentalPrice && damagedPrice) {
+                        // Compare by price (1-10 days)
+                        if (rentalPrice.cena_1_10 > damagedPrice.cena_1_10) {
+                            // Rental vehicle is higher class - use damaged vehicle category and price
+                            baseCategory = damagedCategory || damagedCategoryForComparison;
+                            useDamagedVehiclePrice = true;
+                        } else {
+                            // Rental vehicle is same or lower class - use rental category
+                            baseCategory = rentalCategory;
+                            useDamagedVehiclePrice = false;
+                        }
+                    }
+                } else {
+                    // Normal category comparison
+                    const comparison = compareCategories(rentalCategory, damagedCategoryForComparison);
+                    if (comparison > 0) {
+                        // Rental vehicle is higher class than damaged vehicle
+                        // Client has right only to damaged vehicle category
+                        // But use the actual category from ceník for pricing (not the mapped one)
+                        baseCategory = damagedCategory || damagedCategoryForComparison;
+                        useDamagedVehiclePrice = true;
+                    } else {
+                        // Rental vehicle is same or lower class - use rental category
+                        baseCategory = rentalCategory;
+                        useDamagedVehiclePrice = false;
+                    }
+                }
+            }
+
+            // Check if damaged vehicle is older than 8 years
+            let finalCategory = baseCategory;
+            let finalPriceEntry = null; // For special Škoda downgrade within same category
+            const currentYear = new Date().getFullYear();
+            const yearOfProduction = parseInt(rokProvozu);
+            
+            if (isNaN(yearOfProduction)) {
+                alert('Neplatný rok uvedení do provozu. Zkuste vybrat rok znovu.');
+                return;
+            }
+            
+            if ((currentYear - yearOfProduction) > 8) {
+                // Vehicle is older than 8 years, reduce category by one class
+                let categoryToDowngrade = baseCategory;
+                
+                // Special handling for Škoda vehicles
+                if (znackaPoskozene && modelPoskozene && baseCategory === 'vozy Škoda') {
+                    const damagedBrandLower = znackaPoskozene.toLowerCase();
+                    const rentalBrandLower = znackaPronajmene.toLowerCase();
+                    
+                    if ((damagedBrandLower === 'škoda' || damagedBrandLower === 'skoda') &&
+                        (rentalBrandLower === 'škoda' || rentalBrandLower === 'skoda')) {
+                        // Both are Škoda - use hierarchy within "vozy Škoda" category
+                        // Hierarchy from lowest to highest (by price):
+                        // Citigo (500/400) -> Fabia+Roomster (600/480) -> Octavia I+II (600/480) -> 
+                        // Rapid (650/520) -> Scala+Kamiq+Yeti (750/600) -> Octavia III+IV (1000/800) ->
+                        // Karoq+Elroq (1100/880) -> Superb (1200/960) -> Kodiaq+Enyaq (1350/1080)
+                        
+                        const skodaHierarchy = [
+                            { models: ['citigo'], price: { cena_1_10: 500, cena_11_30: 400 } },
+                            { models: ['fabia', 'roomster'], price: { cena_1_10: 600, cena_11_30: 480 } },
+                            { models: ['octavia i', 'octavia ii'], price: { cena_1_10: 600, cena_11_30: 480 } },
+                            { models: ['rapid'], price: { cena_1_10: 650, cena_11_30: 520 } },
+                            { models: ['scala', 'kamiq', 'yeti'], price: { cena_1_10: 750, cena_11_30: 600 } },
+                            { models: ['octavia iii', 'octavia iv'], price: { cena_1_10: 1000, cena_11_30: 800 } },
+                            { models: ['karoq', 'elroq'], price: { cena_1_10: 1100, cena_11_30: 880 } },
+                            { models: ['superb'], price: { cena_1_10: 1200, cena_11_30: 960 } },
+                            { models: ['kodiaq', 'enyaq'], price: { cena_1_10: 1350, cena_11_30: 1080 } }
+                        ];
+                        
+                        const modelLower = modelPoskozene.toLowerCase(); // Use damaged vehicle model
+                        let currentIndex = -1;
+                        
+                        // Find current position in hierarchy based on damaged vehicle
+                        for (let i = 0; i < skodaHierarchy.length; i++) {
+                            if (skodaHierarchy[i].models.some(m => {
+                                // Check if model matches (e.g., "octavia ii" matches "octavia ii")
+                                if (modelLower === m) return true;
+                                // Check if model contains the hierarchy model
+                                if (modelLower.includes(m) || m.includes(modelLower)) return true;
+                                // For version patterns
+                                const baseModel = m.split(' ')[0];
+                                const modelBase = modelLower.split(' ')[0];
+                                if (baseModel === modelBase) {
+                                    // Check if version matches (I, II, III, IV)
+                                    const versionPattern = /[ivx]+/i;
+                                    const modelVersion = modelLower.match(versionPattern);
+                                    const hierarchyVersion = m.match(versionPattern);
+                                    if (modelVersion && hierarchyVersion && modelVersion[0] === hierarchyVersion[0]) {
+                                        return true;
+                                    }
+                                }
+                                return false;
+                            })) {
+                                currentIndex = i;
+                                break;
+                            }
+                        }
+                        
+                        // If found and not at lowest, go one step down
+                        if (currentIndex > 0) {
+                            const lowerEntry = skodaHierarchy[currentIndex - 1];
+                            // Find the actual ceník entry with matching price
+                            finalPriceEntry = cenÝkData.find(data => {
+                                if (data.kategorie !== 'vozy Škoda') return false;
+                                return data.cena_1_10_dni === lowerEntry.price.cena_1_10 &&
+                                       data.cena_11_30_dni === lowerEntry.price.cena_11_30;
+                            });
+                            
+                            if (finalPriceEntry) {
+                                // Keep "vozy Škoda" category but use the lower price entry
+                                finalCategory = 'vozy Škoda';
+                            }
+                        } else if (currentIndex === 0) {
+                            // Already at lowest, can't downgrade further
+                            // Keep current category
+                        }
+                    } else if (damagedBrandLower === 'škoda' || damagedBrandLower === 'skoda') {
+                        // Damaged is Škoda but rental is different brand - use mapping
+                        const fullModelName = 'Škoda ' + modelPoskozene;
+                        const modelLower = modelPoskozene.toLowerCase();
+                        
+                        for (const mapping of skodaVWMapping) {
+                            const skodaModelLower = mapping.skoda.toLowerCase();
+                            
+                            if (skodaModelLower === fullModelName.toLowerCase() ||
+                                fullModelName.toLowerCase().startsWith(skodaModelLower)) {
+                                const baseModel = modelLower.split(' ')[0];
+                                const mappedBaseModel = skodaModelLower.replace('škoda ', '').split(' ')[0];
+                                
+                                if (baseModel === mappedBaseModel) {
+                                    categoryToDowngrade = mapping.kategorie;
+                                    break;
+                                }
+                            }
+                        }
+                        
+                        const lowerCategory = getLowerCategory(categoryToDowngrade);
+                        if (lowerCategory) {
+                            finalCategory = lowerCategory;
+                        } else if (categoryToDowngrade !== baseCategory) {
+                            finalCategory = categoryToDowngrade;
+                        }
+                    }
+                } else {
+                    // Not Škoda or not "vozy Škoda" category, use normal downgrade logic
+                    const lowerCategory = getLowerCategory(baseCategory);
+                    if (lowerCategory) {
+                        finalCategory = lowerCategory;
+                    }
+                }
+            }
+
+            // Find price for final category
+            // If finalCategory is "vozy Škoda" and we have brand/model, use specific price
+            let price = finalPriceEntry;
+            if (!price && finalCategory === 'vozy Škoda') {
+                // Use the flag to determine which vehicle's price to use
+                if (useDamagedVehiclePrice && znackaPoskozene && modelPoskozene) {
+                    // Use damaged vehicle price
+                    price = findPriceByCategory(finalCategory, znackaPoskozene, modelPoskozene);
+                } else if (!useDamagedVehiclePrice && znackaPronajmene && modelPronajmene) {
+                    // Use rental vehicle price
+                    price = findPriceByCategory(finalCategory, znackaPronajmene, modelPronajmene);
+                } else {
+                    // Fallback: try both
+                    if (znackaPronajmene && modelPronajmene) {
+                        price = findPriceByCategory(finalCategory, znackaPronajmene, modelPronajmene);
+                    }
+                    if (!price && znackaPoskozene && modelPoskozene) {
+                        price = findPriceByCategory(finalCategory, znackaPoskozene, modelPoskozene);
+                    }
+                }
+            }
+            // If still no price, use generic findPriceByCategory
+            if (!price) {
+                price = findPriceByCategory(finalCategory);
+            }
+            
+            if (price) {
+                const priceText1 = price.cena_1_10.toLocaleString('cs-CZ') + ' Kč bez DPH';
+                const priceText2 = price.cena_11_30.toLocaleString('cs-CZ') + ' Kč bez DPH';
+                
+                // Collect notes if category was adjusted
+                const notes = [];
+                
+                // Check if rental vehicle was higher class than damaged vehicle
+                // This applies both for normal category comparison and for Škoda price comparison
+                if (useDamagedVehiclePrice || (damagedCategory && compareCategories(rentalCategory, damagedCategory) > 0)) {
+                    notes.push('nárok max. podle třídy poškozeného vozidla');
+                }
+                
+                // Check if category was reduced due to age
+                if (finalCategory !== baseCategory || finalPriceEntry) {
+                    notes.push('sníženo o 1 třídu (auto starší 8 let)');
+                }
+                
+                const noteText = notes.length > 0 ? notes.join(', ') : '';
+                
+                // Set price values
+                document.getElementById('cenaDo14').textContent = priceText1;
+                document.getElementById('cenaNad14').textContent = priceText2;
+                
+                // Set notes on separate lines
+                document.getElementById('noteDo14').textContent = noteText;
+                document.getElementById('noteNad14').textContent = noteText;
+                
+                document.getElementById('resultsSection').style.display = 'block';
+            } else {
+                alert('Cena pro vybranou kategorii nebyla nalezena.');
+            }
+        }
+
+        // Set default date to today
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date();
+            const dateStr = today.toISOString().split('T')[0];
+            document.getElementById('datumPronajmu').value = dateStr;
+
+            populateDropdowns();
+
+            document.getElementById('calculateBtn').addEventListener('click', calculate);
+        });
+    </script>
+</body>
+</html>
+
