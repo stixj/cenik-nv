@@ -681,6 +681,50 @@
             border-radius: 8px;
         }
 
+        .supplementary-info-columns {
+            display: flex;
+            gap: 30px;
+            margin-top: 15px;
+        }
+
+        .supplementary-info-column {
+            flex: 1;
+        }
+
+        .supplementary-info-column ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .supplementary-info-column li {
+            color: #004033;
+            font-size: 12px;
+            line-height: 1.6;
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .supplementary-info-column li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #004033;
+            font-weight: bold;
+        }
+
+        .supplementary-info-column li:last-child {
+            margin-bottom: 0;
+        }
+
+        @media (max-width: 768px) {
+            .supplementary-info-columns {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .header {
@@ -807,10 +851,20 @@
             
             <div class="footer-text">
                 <h3 style="font-family: 'DirectSans', sans-serif; font-size: 14px; font-weight: 600; color: #666; margin-bottom: 10px; margin-top: 0;">Doplňující informace</h3>
-                Všechny denní sazby jsou bez odpočtu pevných nákladů (z této částky už tedy nebudeme odečítat náklady za opotřebení poškozeného vozidla).<br>
-                Ceny nezahrnují pohonné hmoty a případnou spoluúčast za poškození vozidla.<br>
-                Pokud je vaše poškozené auto starší než 8 let, sazba za půjčení náhradního auta se o jednu třídu sníží.<br>
-                Cenu půjčovného nad 30 dní je nutné konzultovat s likvidátorem dané škodní události.
+                <div class="supplementary-info-columns">
+                    <div class="supplementary-info-column">
+                        <ul>
+                            <li>Všechny denní sazby jsou uvedeny v Kč bez DPH a nebudou u nich odečítány pevné náklady.</li>
+                            <li>Denní sazby ostatních vozidel budou posuzovány individuálně.</li>
+                        </ul>
+                    </div>
+                    <div class="supplementary-info-column">
+                        <ul>
+                            <li>Při stáří poškozeného vozidla nad 8 let bude denní sazba snížena o 20 %.</li>
+                            <li>Pro sazby půjčovného nad 30 dní je nutná konzultace s likvidátorem dané škodní události.</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -1361,9 +1415,10 @@
         }
 
         // Vehicle brands list
+        // Note: DS is placed before Dacia and Dodge to ensure it's matched first (DS is a brand, not part of Dacia)
         const vehicleBrands = [
             'Alfa Romeo', 'Audi', 'Baic', 'BMW', 'Cadillac', 'Chevrolet', 'Chrysler', 'Citroën', 'Cupra', 
-            'Dacia', 'Dodge', 'DS', 'Fiat', 'Ford', 'Honda', 'Hyundai', 'Infiniti', 'Infinity', 'Isuzu', 
+            'DS', 'Dacia', 'Dodge', 'Fiat', 'Ford', 'Honda', 'Hyundai', 'Infiniti', 'Infinity', 'Isuzu', 
             'Iveco', 'Jaguar', 'Jaecoo', 'Jeep', 'Kia', 'Lancia', 'Land Rover', 'Leapmotor', 'Lexus', 'Maserati', 'Mazda', 
             'Mercedes-Benz', 'MG', 'Mini', 'Mitsubishi', 'Nissan', 'Opel', 'Peugeot', 'Porsche', 
             'Renault', 'Saab', 'Seat', 'Škoda', 'Smart', 'SsangYong', 'Subaru', 'Suzuki', 'Tesla', 
@@ -1423,9 +1478,10 @@
         function formatBrandModelText(text, category) {
             if (!text) return '';
             
-            // Special handling for "vozy Škoda" - skip formatting
+            // Special handling for "vozy Škoda" - replace " + " with ", " but don't format brands
             if (category && category.toLowerCase().includes('škoda')) {
-                return text;
+                // Replace " + " with ", " for Škoda models
+                return text.replace(/\s*\+\s*/g, ', ');
             }
             
             // Also check if text looks like Škoda models (no brand names, just models like "Citigo", "Fabia + Roomster")
@@ -1433,9 +1489,13 @@
                 (text.split(',').length === 1 && !findMatchingBrand(text));
             
             if (isSkodaCategory) {
-                // For Škoda category, just return text as is (no brands to make bold)
-                return text;
+                // For Škoda category, replace " + " with ", " but don't format brands
+                return text.replace(/\s*\+\s*/g, ', ');
             }
+            
+            // Replace " + " with ", " and " +" or "+ " with ", " (for cases like "5+6" or "A4 +A5")
+            // This handles models within the same brand
+            text = text.replace(/\s*\+\s*/g, ', ');
             
             // Split by comma to get individual entries
             const parts = text.split(',');
@@ -1517,16 +1577,25 @@
                 return part;
             });
             
-            return formattedParts.join(', ');
+            // Join parts and replace ", " between brands (where one part ends with </strong> and next starts with <strong>) with "; "
+            let result = formattedParts.join(', ');
+            
+            // Replace ", " between different brands (where </strong> is followed by <strong>) with "; "
+            // This handles cases where there might be text (models) after </strong> before the comma
+            // Pattern: </strong> followed by optional text, then comma and space, then <strong>
+            result = result.replace(/<\/strong>([^<]*?),\s*<strong>/g, '</strong>$1; <strong>');
+            
+            return result;
         }
         
         // Format brand model text while preserving existing highlights (mark tags)
         function formatBrandModelTextWithHighlights(text, category) {
             if (!text) return '';
             
-            // Special handling for "vozy Škoda" - skip formatting
+            // Special handling for "vozy Škoda" - replace " + " with ", " but don't format brands
             if (category && category.toLowerCase().includes('škoda')) {
-                return text;
+                // Replace " + " with ", " for Škoda models (preserve mark tags if any)
+                return text.replace(/\s*\+\s*/g, ', ');
             }
             
             // Also check if text looks like Škoda models
@@ -1534,8 +1603,13 @@
                 (text.split(',').length === 1 && !findMatchingBrand(text.replace(/<mark[^>]*>.*?<\/mark>/gi, '')));
             
             if (isSkodaCategory) {
-                return text;
+                // For Škoda category, replace " + " with ", " but don't format brands
+                return text.replace(/\s*\+\s*/g, ', ');
             }
+            
+            // Replace " + " with ", " and " +" or "+ " with ", " (for cases like "5+6" or "A4 +A5")
+            // This handles models within the same brand
+            text = text.replace(/\s*\+\s*/g, ', ');
             
             // Helper function to map position from text without marks to text with marks
             function mapPosition(textWithMarks, posInPlainText) {
@@ -1647,9 +1721,17 @@
                 return part;
             });
             
-            return formattedParts.join(', ');
+            // Join parts and replace ", " between brands (where one part ends with </strong> and next starts with <strong>) with "; "
+            let result = formattedParts.join(', ');
+            
+            // Replace ", " between different brands (where </strong> is followed by <strong>) with "; "
+            // This handles cases where there might be text (models) after </strong> before the comma
+            // Pattern: </strong> followed by optional text, then comma and space, then <strong>
+            result = result.replace(/<\/strong>([^<]*?),\s*<strong>/g, '</strong>$1; <strong>');
+            
+            return result;
         }
-
+        
         function updateTable() {
             const tbody = document.getElementById('tableBody');
             const noResults = document.getElementById('noResults');
@@ -2116,6 +2198,10 @@
         function formatBrandModelTextRPS(text, category) {
             if (!text) return '';
             
+            // Replace " + " with ", " and " +" or "+ " with ", " (for cases like "5+6" or "A4 +A5")
+            // This handles models within the same brand
+            text = text.replace(/\s*\+\s*/g, ', ');
+            
             // For RPS, we can use the same formatting as Direct
             // Split by comma to get individual entries
             const parts = text.split(',');
@@ -2148,12 +2234,24 @@
                 return part;
             });
             
-            return formattedParts.join(', ');
+            // Join parts and replace ", " between brands (where one part ends with </strong> and next starts with <strong>) with "; "
+            let result = formattedParts.join(', ');
+            
+            // Replace ", " between different brands (where </strong> is followed by <strong>) with "; "
+            // This handles cases where there might be text (models) after </strong> before the comma
+            // Pattern: </strong> followed by optional text, then comma and space, then <strong>
+            result = result.replace(/<\/strong>([^<]*?),\s*<strong>/g, '</strong>$1; <strong>');
+            
+            return result;
         }
         
         // Format brand model text for RPS while preserving existing highlights (mark tags)
         function formatBrandModelTextWithHighlightsRPS(text, category) {
             if (!text) return '';
+            
+            // Replace " + " with ", " and " +" or "+ " with ", " (for cases like "5+6" or "A4 +A5")
+            // This handles models within the same brand
+            text = text.replace(/\s*\+\s*/g, ', ');
             
             // Helper function to map position from text without marks to text with marks
             function mapPosition(textWithMarks, posInPlainText) {
@@ -2275,7 +2373,15 @@
                 return part;
             });
             
-            return formattedParts.join(', ');
+            // Join parts and replace ", " between brands (where one part ends with </strong> and next starts with <strong>) with "; "
+            let result = formattedParts.join(', ');
+            
+            // Replace ", " between different brands (where </strong> is followed by <strong>) with "; "
+            // This handles cases where there might be text (models) after </strong> before the comma
+            // Pattern: </strong> followed by optional text, then comma and space, then <strong>
+            result = result.replace(/<\/strong>([^<]*?),\s*<strong>/g, '</strong>$1; <strong>');
+            
+            return result;
         }
 
         function updateRPSTable() {

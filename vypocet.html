@@ -966,6 +966,50 @@
             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.04);
             line-height: 1.5;
         }
+
+        .supplementary-info-columns {
+            display: flex;
+            gap: 30px;
+            margin-top: 15px;
+        }
+
+        .supplementary-info-column {
+            flex: 1;
+        }
+
+        .supplementary-info-column ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .supplementary-info-column li {
+            color: #004033;
+            font-size: 12px;
+            line-height: 1.6;
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .supplementary-info-column li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #004033;
+            font-weight: bold;
+        }
+
+        .supplementary-info-column li:last-child {
+            margin-bottom: 0;
+        }
+
+        @media (max-width: 768px) {
+            .supplementary-info-columns {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
         
         .category-note,
         .result-note {
@@ -1081,6 +1125,74 @@
                  color: #666;
                  page-break-inside: avoid;
                  position: relative;
+             }
+             
+             /* Supplementary info columns in print - same style as screen */
+             .supplementary-info-columns {
+                 display: table !important;
+                 width: 100% !important;
+                 table-layout: fixed !important;
+                 margin-top: 15px !important;
+                 border-collapse: separate !important;
+                 border-spacing: 30px 0 !important;
+             }
+             
+             .supplementary-info-column {
+                 display: table-cell !important;
+                 width: 50% !important;
+                 vertical-align: top !important;
+             }
+             
+             .supplementary-info-column ul {
+                 list-style: none !important;
+                 padding: 0 !important;
+                 margin: 0 !important;
+             }
+             
+             .supplementary-info-column li {
+                 color: #004033 !important;
+                 font-size: 9pt !important;
+                 line-height: 1.6 !important;
+                 margin-bottom: 8px !important;
+                 padding-left: 20px !important;
+                 position: relative !important;
+                 -webkit-print-color-adjust: exact !important;
+                 print-color-adjust: exact !important;
+                 color-adjust: exact !important;
+             }
+             
+             .supplementary-info-column li:before {
+                 content: "•" !important;
+                 position: absolute !important;
+                 left: 0 !important;
+                 color: #004033 !important;
+                 font-weight: bold !important;
+                 -webkit-print-color-adjust: exact !important;
+                 print-color-adjust: exact !important;
+                 color-adjust: exact !important;
+             }
+             
+             .supplementary-info-column li:last-child {
+                 margin-bottom: 0 !important;
+             }
+             
+             /* Force colors in print */
+             .doplnujici-info .supplementary-info-column li,
+             .doplnujici-info .supplementary-info-column li:before {
+                 color: #004033 !important;
+                 -webkit-print-color-adjust: exact !important;
+                 print-color-adjust: exact !important;
+                 color-adjust: exact !important;
+             }
+             
+             /* Ensure h3 in footer-text has proper styling in print */
+             .footer-text h3 {
+                 font-family: 'DirectSans', sans-serif !important;
+                 font-size: 11pt !important;
+                 font-weight: 600 !important;
+                 color: #666 !important;
+                 margin-bottom: 10px !important;
+                 margin-top: 0 !important;
              }
              
              /* Print footer with contact info - bottom right corner, shown after footer-text (last page) */
@@ -1806,10 +1918,20 @@
 
             <div class="footer-text doplnujici-info">
                 <h3 style="font-family: 'DirectSans', sans-serif; font-size: 14px; font-weight: 600; color: #666; margin-bottom: 10px; margin-top: 0;">Doplňující informace</h3>
-                Všechny denní sazby jsou bez odpočtu pevných nákladů (z této částky už tedy nebudeme odečítat náklady za opotřebení poškozeného vozidla).<br>
-                Ceny nezahrnují pohonné hmoty a případnou spoluúčast za poškození vozidla.<br>
-                Pokud je vaše poškozené auto starší než 8 let, sazba za půjčení náhradního auta se o jednu třídu sníží.<br>
-                Cenu půjčovného nad 30 dní je nutné konzultovat s likvidátorem dané škodní události.
+                <div class="supplementary-info-columns">
+                    <div class="supplementary-info-column">
+                        <ul>
+                            <li>Všechny denní sazby jsou uvedeny v Kč bez DPH a nebudou u nich odečítány pevné náklady.</li>
+                            <li>Denní sazby ostatních vozidel budou posuzovány individuálně.</li>
+                        </ul>
+                    </div>
+                    <div class="supplementary-info-column">
+                        <ul>
+                            <li>Při stáří poškozeného vozidla nad 8 let bude denní sazba snížena o 20 %.</li>
+                            <li>Pro sazby půjčovného nad 30 dní je nutná konzultace s likvidátorem dané škodní události.</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
             
             <!-- Print Date (hidden on screen, visible in print - only on last page) -->
@@ -3090,6 +3212,7 @@
             let finalPriceEntry = null; // For special Škoda downgrade within same category
             const currentYear = new Date().getFullYear();
             const yearOfProduction = parseInt(rokProvozu);
+            let apply20PercentDiscount = false; // Flag for 20% discount for vehicles older than 8 years
             
             if (isNaN(yearOfProduction)) {
                 alert('Neplatný rok uvedení do provozu. Zkuste vybrat rok znovu.');
@@ -3097,146 +3220,47 @@
             }
             
             if ((currentYear - yearOfProduction) > 8) {
-                // Vehicle is older than 8 years, reduce category by one class
-                let categoryToDowngrade = baseCategory;
-                
-                // Special handling for Škoda vehicles
-                if (znackaPoskozene && modelPoskozene && baseCategory === 'vozy Škoda') {
-                    const damagedBrandLower = znackaPoskozene.toLowerCase();
-                    const rentalBrandLower = znackaPronajmene.toLowerCase();
-                    
-                    if ((damagedBrandLower === 'škoda' || damagedBrandLower === 'skoda') &&
-                        (rentalBrandLower === 'škoda' || rentalBrandLower === 'skoda')) {
-                        // Both are Škoda - use hierarchy within "vozy Škoda" category
-                        // Hierarchy from lowest to highest (by price):
-                        // Citigo (500/400) -> Fabia+Roomster (600/480) -> Octavia I+II (600/480) -> 
-                        // Rapid (650/520) -> Scala+Kamiq+Yeti (750/600) -> Octavia III+IV (1000/800) ->
-                        // Karoq+Elroq (1100/880) -> Superb (1200/960) -> Kodiaq+Enyaq (1350/1080)
-                        
-                        const skodaHierarchy = [
-                            { models: ['citigo'], price: { cena_1_10: 500, cena_11_30: 400 } },
-                            { models: ['fabia', 'roomster'], price: { cena_1_10: 600, cena_11_30: 480 } },
-                            { models: ['octavia i', 'octavia ii'], price: { cena_1_10: 600, cena_11_30: 480 } },
-                            { models: ['rapid'], price: { cena_1_10: 650, cena_11_30: 520 } },
-                            { models: ['scala', 'kamiq', 'yeti'], price: { cena_1_10: 750, cena_11_30: 600 } },
-                            { models: ['octavia iii', 'octavia iv'], price: { cena_1_10: 1000, cena_11_30: 800 } },
-                            { models: ['karoq', 'elroq'], price: { cena_1_10: 1100, cena_11_30: 880 } },
-                            { models: ['superb'], price: { cena_1_10: 1200, cena_11_30: 960 } },
-                            { models: ['kodiaq', 'enyaq'], price: { cena_1_10: 1350, cena_11_30: 1080 } }
-                        ];
-                        
-                        const modelLower = modelPoskozene.toLowerCase(); // Use damaged vehicle model
-                        let currentIndex = -1;
-                        
-                        // Find current position in hierarchy based on damaged vehicle
-                        for (let i = 0; i < skodaHierarchy.length; i++) {
-                            if (skodaHierarchy[i].models.some(m => {
-                                // Check if model matches (e.g., "octavia ii" matches "octavia ii")
-                                if (modelLower === m) return true;
-                                // Check if model contains the hierarchy model
-                                if (modelLower.includes(m) || m.includes(modelLower)) return true;
-                                // For version patterns
-                                const baseModel = m.split(' ')[0];
-                                const modelBase = modelLower.split(' ')[0];
-                                if (baseModel === modelBase) {
-                                    // Check if version matches (I, II, III, IV)
-                                    const versionPattern = /[ivx]+/i;
-                                    const modelVersion = modelLower.match(versionPattern);
-                                    const hierarchyVersion = m.match(versionPattern);
-                                    if (modelVersion && hierarchyVersion && modelVersion[0] === hierarchyVersion[0]) {
-                                        return true;
-                                    }
-                                }
-                                return false;
-                            })) {
-                                currentIndex = i;
-                                break;
-                            }
-                        }
-                        
-                        // If found and not at lowest, go one step down
-                        if (currentIndex > 0) {
-                            const lowerEntry = skodaHierarchy[currentIndex - 1];
-                            // Find the actual ceník entry with matching price
-                            finalPriceEntry = cenÝkData.find(data => {
-                                if (data.kategorie !== 'vozy Škoda') return false;
-                                return data.cena_1_10_dni === lowerEntry.price.cena_1_10 &&
-                                       data.cena_11_30_dni === lowerEntry.price.cena_11_30;
-                            });
-                            
-                            if (finalPriceEntry) {
-                                // Keep "vozy Škoda" category but use the lower price entry
-                                finalCategory = 'vozy Škoda';
-                            }
-                        } else if (currentIndex === 0) {
-                            // Already at lowest, can't downgrade further
-                            // Keep current category
-                        }
-                    } else if (damagedBrandLower === 'škoda' || damagedBrandLower === 'skoda') {
-                        // Damaged is Škoda but rental is different brand - use mapping
-                        const fullModelName = 'Škoda ' + modelPoskozene;
-                        const modelLower = modelPoskozene.toLowerCase();
-                        
-                        for (const mapping of skodaVWMapping) {
-                            const skodaModelLower = mapping.skoda.toLowerCase();
-                            
-                            if (skodaModelLower === fullModelName.toLowerCase() ||
-                                fullModelName.toLowerCase().startsWith(skodaModelLower)) {
-                                const baseModel = modelLower.split(' ')[0];
-                                const mappedBaseModel = skodaModelLower.replace('škoda ', '').split(' ')[0];
-                                
-                                if (baseModel === mappedBaseModel) {
-                                    categoryToDowngrade = mapping.kategorie;
-                                    break;
-                                }
-                            }
-                        }
-                        
-                        const lowerCategory = getLowerCategory(categoryToDowngrade);
-                        if (lowerCategory) {
-                            finalCategory = lowerCategory;
-                        } else if (categoryToDowngrade !== baseCategory) {
-                            finalCategory = categoryToDowngrade;
-                        }
-                    }
-                } else {
-                    // Not Škoda or not "vozy Škoda" category, use normal downgrade logic
-                    const lowerCategory = getLowerCategory(baseCategory);
-                    if (lowerCategory) {
-                        finalCategory = lowerCategory;
-                    }
-                }
+                // Vehicle is older than 8 years, apply 20% discount instead of category reduction
+                apply20PercentDiscount = true;
+                // Keep original category, no downgrade needed
+                finalCategory = baseCategory;
             }
 
             // Find price for final category
+            // If useDamagedVehiclePrice is true, use damaged vehicle price (for all categories)
             // If finalCategory is "vozy Škoda" and we have brand/model, use specific price
             let price = finalPriceEntry;
-            if (!price && finalCategory === 'vozy Škoda') {
-                // Use the flag to determine which vehicle's price to use
+            if (!price) {
                 if (useDamagedVehiclePrice && znackaPoskozene && modelPoskozene) {
-                    // Use damaged vehicle price
-                    price = findPriceByCategory(finalCategory, znackaPoskozene, modelPoskozene);
-                } else if (!useDamagedVehiclePrice && znackaPronajmene && modelPronajmene) {
-                    // Use rental vehicle price
+                    // Rental vehicle is higher class - use damaged vehicle price
+                    // Try to find specific price for damaged vehicle in its category
+                    if (finalCategory === 'vozy Škoda') {
+                        price = findPriceByCategory(finalCategory, znackaPoskozene, modelPoskozene);
+                    } else {
+                        // For non-Skoda categories, use category price (which should match damaged vehicle category)
+                        price = findPriceByCategory(finalCategory);
+                    }
+                } else if (finalCategory === 'vozy Škoda' && znackaPronajmene && modelPronajmene) {
+                    // Use rental vehicle price for Škoda
                     price = findPriceByCategory(finalCategory, znackaPronajmene, modelPronajmene);
                 } else {
-                    // Fallback: try both
-                    if (znackaPronajmene && modelPronajmene) {
-                        price = findPriceByCategory(finalCategory, znackaPronajmene, modelPronajmene);
-                    }
-                    if (!price && znackaPoskozene && modelPoskozene) {
-                        price = findPriceByCategory(finalCategory, znackaPoskozene, modelPoskozene);
-                    }
+                    // Use generic category price
+                    price = findPriceByCategory(finalCategory);
                 }
-            }
-            // If still no price, use generic findPriceByCategory
-            if (!price) {
-                price = findPriceByCategory(finalCategory);
             }
             
             if (price) {
-                const priceText1 = price.cena_1_10.toLocaleString('cs-CZ') + ' Kč bez DPH';
-                const priceText2 = price.cena_11_30.toLocaleString('cs-CZ') + ' Kč bez DPH';
+                // Apply 20% discount if vehicle is older than 8 years
+                let finalPrice1_10 = price.cena_1_10 || price.cena_1_10_dni;
+                let finalPrice11_30 = price.cena_11_30 || price.cena_11_30_dni;
+                
+                if (apply20PercentDiscount) {
+                    finalPrice1_10 = Math.round(finalPrice1_10 * 0.8);
+                    finalPrice11_30 = Math.round(finalPrice11_30 * 0.8);
+                }
+                
+                const priceText1 = finalPrice1_10.toLocaleString('cs-CZ') + ' Kč bez DPH';
+                const priceText2 = finalPrice11_30.toLocaleString('cs-CZ') + ' Kč bez DPH';
                 
                 // Collect notes if category was adjusted
                 const notes = [];
@@ -3244,15 +3268,16 @@
                 // Check if rental vehicle was higher class than damaged vehicle
                 // This applies both for normal category comparison and for Škoda price comparison
                 if (useDamagedVehiclePrice || (damagedCategory && compareCategories(rentalCategory, damagedCategory) > 0)) {
-                    notes.push('nárok max. podle třídy poškozeného vozidla');
+                    notes.push('Nárok max. podle třídy poškozeného vozidla');
                 }
                 
-                // Check if category was reduced due to age
-                if (finalCategory !== baseCategory || finalPriceEntry) {
-                    notes.push('sníženo o 1 třídu (poškozené vozidlo je starší 8 let)');
+                // Check if 20% discount was applied due to age
+                if (apply20PercentDiscount) {
+                    notes.push('Sazba snížena o 20 % (vozidlo je starší než 8 let)');
                 }
                 
-                const noteText = notes.length > 0 ? notes.join(', ') : '';
+                // Join notes with period and space when both are present, otherwise just use the single note
+                const noteText = notes.length > 0 ? notes.join('. ') : '';
                 
                 // Set price values
                 document.getElementById('cenaDo14').textContent = priceText1;
@@ -3398,6 +3423,10 @@
                 return text;
             }
             
+            // Replace " + " with ", " and " +" or "+ " with ", " (for cases like "5+6" or "A4 +A5")
+            // This handles models within the same brand
+            text = text.replace(/\s*\+\s*/g, ', ');
+            
             // Split by comma to get individual entries
             const parts = text.split(',');
             const formattedParts = parts.map(part => {
@@ -3478,7 +3507,15 @@
                 return part;
             });
             
-            return formattedParts.join(', ');
+            // Join parts and replace ", " between brands (where one part ends with </strong> and next starts with <strong>) with "; "
+            let result = formattedParts.join(', ');
+            
+            // Replace ", " between different brands (where </strong> is followed by <strong>) with "; "
+            // This handles cases where there might be text (models) after </strong> before the comma
+            // Pattern: </strong> followed by optional text, then comma and space, then <strong>
+            result = result.replace(/<\/strong>([^<]*?),\s*<strong>/g, '</strong>$1; <strong>');
+            
+            return result;
         }
 
         // Calculate and display damaged vehicle category
@@ -3506,78 +3543,22 @@
             const yearOfProduction = parseInt(rokProvozu);
             let finalCategory = damagedCategory;
             let categoryNote = '';
-            let finalPriceEntry = null;
+            let apply20PercentDiscount = false; // Flag for 20% discount for vehicles older than 8 years
 
             if (!isNaN(yearOfProduction) && (currentYear - yearOfProduction) > 8) {
-                // Vehicle is older than 8 years, reduce category by one class
-                if (damagedCategory === 'vozy Škoda' && znackaPoskozene.toLowerCase() === 'škoda') {
-                    // Special handling for Škoda vehicles
-                    const skodaHierarchy = [
-                        { models: ['citigo'], price: { cena_1_10: 500, cena_11_30: 400 } },
-                        { models: ['fabia', 'roomster'], price: { cena_1_10: 600, cena_11_30: 480 } },
-                        { models: ['octavia i', 'octavia ii'], price: { cena_1_10: 600, cena_11_30: 480 } },
-                        { models: ['rapid'], price: { cena_1_10: 650, cena_11_30: 520 } },
-                        { models: ['scala', 'kamiq', 'yeti'], price: { cena_1_10: 750, cena_11_30: 600 } },
-                        { models: ['octavia iii', 'octavia iv'], price: { cena_1_10: 1000, cena_11_30: 800 } },
-                        { models: ['karoq', 'elroq'], price: { cena_1_10: 1100, cena_11_30: 880 } },
-                        { models: ['superb'], price: { cena_1_10: 1200, cena_11_30: 960 } },
-                        { models: ['kodiaq', 'enyaq'], price: { cena_1_10: 1350, cena_11_30: 1080 } }
-                    ];
-
-                    const modelLower = modelPoskozene.toLowerCase();
-                    let currentIndex = -1;
-
-                    for (let i = 0; i < skodaHierarchy.length; i++) {
-                        if (skodaHierarchy[i].models.some(m => {
-                            if (modelLower === m) return true;
-                            if (modelLower.includes(m) || m.includes(modelLower)) return true;
-                            const baseModel = m.split(' ')[0];
-                            const modelBase = modelLower.split(' ')[0];
-                            if (baseModel === modelBase) {
-                                const versionPattern = /[ivx]+/i;
-                                const modelVersion = modelLower.match(versionPattern);
-                                const hierarchyVersion = m.match(versionPattern);
-                                if (modelVersion && hierarchyVersion && modelVersion[0] === hierarchyVersion[0]) {
-                                    return true;
-                                }
-                            }
-                            return false;
-                        })) {
-                            currentIndex = i;
-                            break;
-                        }
-                    }
-
-                    if (currentIndex > 0) {
-                        const lowerEntry = skodaHierarchy[currentIndex - 1];
-                        finalPriceEntry = cenÝkData.find(data => {
-                            if (data.kategorie !== 'vozy Škoda') return false;
-                            return data.cena_1_10_dni === lowerEntry.price.cena_1_10 &&
-                                   data.cena_11_30_dni === lowerEntry.price.cena_11_30;
-                        });
-                        if (finalPriceEntry) {
-                            finalCategory = 'vozy Škoda';
-                            categoryNote = 'sníženo o 1 třídu (poškozené vozidlo je starší 8 let)';
-                        }
-                    }
-                } else {
-                    // Normal downgrade logic
-                    const lowerCategory = getLowerCategory(damagedCategory);
-                    if (lowerCategory) {
-                        finalCategory = lowerCategory;
-                        categoryNote = 'sníženo o 1 třídu (poškozené vozidlo je starší 8 let)';
-                    }
-                }
+                // Vehicle is older than 8 years, apply 20% discount instead of category reduction
+                apply20PercentDiscount = true;
+                // Keep original category, no downgrade needed
+                finalCategory = damagedCategory;
+                categoryNote = 'Sazba snížena o 20 % (poškozené vozidlo je starší 8 let)';
             }
 
             // Get price for final category
-            let price = finalPriceEntry;
-            if (!price) {
-                if (finalCategory === 'vozy Škoda' && znackaPoskozene && modelPoskozene) {
-                    price = findPriceByCategory(finalCategory, znackaPoskozene, modelPoskozene);
-                } else {
-                    price = findPriceByCategory(finalCategory);
-                }
+            let price = null;
+            if (finalCategory === 'vozy Škoda' && znackaPoskozene && modelPoskozene) {
+                price = findPriceByCategory(finalCategory, znackaPoskozene, modelPoskozene);
+            } else {
+                price = findPriceByCategory(finalCategory);
             }
 
             if (!price) {
@@ -3586,12 +3567,18 @@
             }
 
             // Normalize price structure (handle both finalPriceEntry and findPriceByCategory return formats)
-            const price1_10 = price.cena_1_10 || price.cena_1_10_dni;
-            const price11_30 = price.cena_11_30 || price.cena_11_30_dni;
+            let price1_10 = price.cena_1_10 || price.cena_1_10_dni;
+            let price11_30 = price.cena_11_30 || price.cena_11_30_dni;
 
             if (!price1_10 || !price11_30) {
                 section.style.display = 'none';
                 return;
+            }
+
+            // Apply 20% discount if vehicle is older than 8 years
+            if (apply20PercentDiscount) {
+                price1_10 = Math.round(price1_10 * 0.8);
+                price11_30 = Math.round(price11_30 * 0.8);
             }
 
             // Find equivalent category for Škoda vehicles to display in category name
