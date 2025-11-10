@@ -1111,7 +1111,39 @@
 
         // Function to remove diacritics for search
         function removeDiacritics(str) {
-            return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+            if (!str) return '';
+            const diacriticsMap = {
+                'à': 'a', 'á': 'a', 'â': 'a', 'ã': 'a', 'ä': 'a', 'å': 'a',
+                'è': 'e', 'é': 'e', 'ê': 'e', 'ë': 'e',
+                'ì': 'i', 'í': 'i', 'î': 'i', 'ï': 'i',
+                'ò': 'o', 'ó': 'o', 'ô': 'o', 'õ': 'o', 'ö': 'o',
+                'ù': 'u', 'ú': 'u', 'û': 'u', 'ü': 'u',
+                'ý': 'y', 'ÿ': 'y',
+                'ñ': 'n', 'ç': 'c',
+                'À': 'A', 'Á': 'A', 'Â': 'A', 'Ã': 'A', 'Ä': 'A', 'Å': 'A',
+                'È': 'E', 'É': 'E', 'Ê': 'E', 'Ë': 'E',
+                'Ì': 'I', 'Í': 'I', 'Î': 'I', 'Ï': 'I',
+                'Ò': 'O', 'Ó': 'O', 'Ô': 'O', 'Õ': 'O', 'Ö': 'O',
+                'Ù': 'U', 'Ú': 'U', 'Û': 'U', 'Ü': 'U',
+                'Ý': 'Y', 'Ÿ': 'Y',
+                'Ñ': 'N', 'Ç': 'C',
+                'č': 'c', 'Č': 'C',
+                'ď': 'd', 'Ď': 'D',
+                'ě': 'e', 'Ě': 'E',
+                'ň': 'n', 'Ň': 'N',
+                'ř': 'r', 'Ř': 'R',
+                'š': 's', 'Š': 'S',
+                'ť': 't', 'Ť': 'T',
+                'ů': 'u', 'Ů': 'U',
+                'ž': 'z', 'Ž': 'Z',
+                'ë': 'e', 'Ë': 'E',
+                'ö': 'o', 'Ö': 'O',
+                'ü': 'u', 'Ü': 'U'
+            };
+            
+            return str.replace(/[^\u0000-\u007E]/g, function(char) {
+                return diacriticsMap[char] || char.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+            });
         }
 
         // Search functionality
@@ -1127,11 +1159,25 @@
                 filteredData = [...cenÝkData];
                 currentSearchTerm = '';
             } else {
-                const normalizedSearchTerm = removeDiacritics(searchTerm);
+                const normalizedSearchTerm = removeDiacritics(searchTerm.toLowerCase());
+                // Split search term into words to search for each word separately
+                // This allows finding "audi a5" in "Audi A4 + A5"
+                const searchWords = normalizedSearchTerm.split(/\s+/).filter(word => word.length > 0);
+                
                 filteredData = cenÝkData.filter(item => {
                     const kategorie = removeDiacritics(item.kategorie.toLowerCase());
                     const znacka = removeDiacritics(item.znacka_typ.toLowerCase());
-                    return kategorie.includes(normalizedSearchTerm) || znacka.includes(normalizedSearchTerm);
+                    const combinedText = kategorie + ' ' + znacka;
+                    
+                    // Check if all search words are present in the combined text
+                    // This allows finding "audi a5" where "audi" is in brand and "a5" is in model
+                    if (searchWords.length > 1) {
+                        // Multiple words - all must be present somewhere in category or brand/model
+                        return searchWords.every(word => combinedText.includes(word));
+                    } else {
+                        // Single word - check if it appears anywhere
+                        return kategorie.includes(normalizedSearchTerm) || znacka.includes(normalizedSearchTerm);
+                    }
                 });
             }
             
@@ -1151,12 +1197,87 @@
             }
             
             const escapedText = escapeHtml(text);
-            const escapedSearchTerm = escapeHtml(searchTerm);
+            const normalizedText = removeDiacritics(text.toLowerCase());
+            const normalizedSearchTerm = removeDiacritics(searchTerm.toLowerCase());
             
-            // Create case-insensitive regex to find all occurrences
-            const regex = new RegExp(`(${escapeRegex(escapedSearchTerm)})`, 'gi');
+            // Split search term into words to highlight each word separately
+            const searchWords = normalizedSearchTerm.split(/\s+/).filter(word => word.length > 0);
             
-            return escapedText.replace(regex, '<mark class="highlight">$1</mark>');
+            if (searchWords.length === 0) {
+                return escapedText;
+            }
+            
+            // Check if all words are present in text
+            const allWordsPresent = searchWords.every(word => normalizedText.includes(word));
+            if (!allWordsPresent) {
+                return escapedText;
+            }
+            
+            // Helper function to find original position from normalized position
+            function findOriginalPosition(normalizedPos) {
+                let normalizedCount = 0;
+                for (let i = 0; i < escapedText.length; i++) {
+                    const normalizedChar = removeDiacritics(escapedText[i].toLowerCase());
+                    if (normalizedChar && normalizedChar.length > 0) {
+                        if (normalizedCount === normalizedPos) {
+                            return i;
+                        }
+                        normalizedCount++;
+                    }
+                }
+                return escapedText.length;
+            }
+            
+            // Create array to track which positions are already highlighted
+            const highlightedRanges = [];
+            
+            // Find and mark all word matches
+            searchWords.forEach(word => {
+                let searchIndex = 0;
+                while (true) {
+                    const matchIndex = normalizedText.indexOf(word, searchIndex);
+                    if (matchIndex === -1) break;
+                    
+                    const originalStart = findOriginalPosition(matchIndex);
+                    const originalEnd = findOriginalPosition(matchIndex + word.length);
+                    
+                    highlightedRanges.push({ start: originalStart, end: originalEnd });
+                    searchIndex = matchIndex + 1;
+                }
+            });
+            
+            // Sort ranges by start position
+            highlightedRanges.sort((a, b) => a.start - b.start);
+            
+            // Merge overlapping ranges
+            const mergedRanges = [];
+            for (let i = 0; i < highlightedRanges.length; i++) {
+                if (mergedRanges.length === 0 || highlightedRanges[i].start > mergedRanges[mergedRanges.length - 1].end) {
+                    mergedRanges.push({ ...highlightedRanges[i] });
+                } else {
+                    mergedRanges[mergedRanges.length - 1].end = Math.max(
+                        mergedRanges[mergedRanges.length - 1].end,
+                        highlightedRanges[i].end
+                    );
+                }
+            }
+            
+            // Build result with highlights
+            let result = '';
+            let lastIndex = 0;
+            
+            mergedRanges.forEach(range => {
+                // Add text before highlight
+                result += escapedText.substring(lastIndex, range.start);
+                // Add highlighted text
+                result += '<mark class="highlight">' + escapedText.substring(range.start, range.end) + '</mark>';
+                lastIndex = range.end;
+            });
+            
+            // Add remaining text
+            result += escapedText.substring(lastIndex);
+            
+            return result;
         }
 
         // Function to highlight search term in text (alias for backward compatibility)
@@ -1398,6 +1519,136 @@
             
             return formattedParts.join(', ');
         }
+        
+        // Format brand model text while preserving existing highlights (mark tags)
+        function formatBrandModelTextWithHighlights(text, category) {
+            if (!text) return '';
+            
+            // Special handling for "vozy Škoda" - skip formatting
+            if (category && category.toLowerCase().includes('škoda')) {
+                return text;
+            }
+            
+            // Also check if text looks like Škoda models
+            const isSkodaCategory = !text.includes(',') || 
+                (text.split(',').length === 1 && !findMatchingBrand(text.replace(/<mark[^>]*>.*?<\/mark>/gi, '')));
+            
+            if (isSkodaCategory) {
+                return text;
+            }
+            
+            // Helper function to map position from text without marks to text with marks
+            function mapPosition(textWithMarks, posInPlainText) {
+                let plainPos = 0;
+                let htmlPos = 0;
+                
+                while (plainPos < posInPlainText && htmlPos < textWithMarks.length) {
+                    // Check for opening mark tag
+                    if (textWithMarks.substring(htmlPos).startsWith('<mark')) {
+                        const markEnd = textWithMarks.indexOf('</mark>', htmlPos);
+                        if (markEnd !== -1) {
+                            // Count characters inside mark tag
+                            const markContentStart = textWithMarks.indexOf('>', htmlPos) + 1;
+                            const markContent = textWithMarks.substring(markContentStart, markEnd);
+                            const markContentLength = markContent.length;
+                            
+                            // If we need to go into the mark content
+                            if (plainPos + markContentLength <= posInPlainText) {
+                                plainPos += markContentLength;
+                                htmlPos = markEnd + 7;
+                                continue;
+                            } else {
+                                // We're inside the mark content
+                                const offsetInMark = posInPlainText - plainPos;
+                                return markContentStart + offsetInMark;
+                            }
+                        }
+                    }
+                    
+                    // Check for closing mark tag
+                    if (textWithMarks.substring(htmlPos).startsWith('</mark>')) {
+                        htmlPos += 7;
+                        continue;
+                    }
+                    
+                    // Check for other HTML tags
+                    if (textWithMarks[htmlPos] === '<') {
+                        const tagEnd = textWithMarks.indexOf('>', htmlPos);
+                        if (tagEnd !== -1) {
+                            htmlPos = tagEnd + 1;
+                            continue;
+                        }
+                    }
+                    
+                    // Regular character
+                    plainPos++;
+                    htmlPos++;
+                }
+                
+                return htmlPos;
+            }
+            
+            // Split by comma, but preserve mark tags
+            const parts = text.split(',');
+            const formattedParts = parts.map(part => {
+                part = part.trim();
+                if (!part) return '';
+                
+                // Extract text without mark tags for brand matching
+                const textWithoutMarks = part.replace(/<mark[^>]*>.*?<\/mark>/gi, '');
+                const matchedBrand = findMatchingBrand(textWithoutMarks);
+                
+                if (matchedBrand) {
+                    // Find brand position in plain text
+                    const brandNormalized = normalizeBrand(matchedBrand).toLowerCase();
+                    const textNormalized = normalizeBrand(textWithoutMarks).toLowerCase();
+                    
+                    let brandEndIndex = -1;
+                    
+                    if (textNormalized.startsWith(brandNormalized + ' ') || textNormalized.startsWith(brandNormalized)) {
+                        // Find actual position in plain text
+                        for (let i = 1; i <= textWithoutMarks.length; i++) {
+                            const testPart = normalizeBrand(textWithoutMarks.substring(0, i)).toLowerCase();
+                            if (testPart === brandNormalized || testPart === brandNormalized + ' ') {
+                                brandEndIndex = i;
+                                break;
+                            } else if (testPart.length > brandNormalized.length + 1) {
+                                break;
+                            }
+                        }
+                        if (brandEndIndex === -1) {
+                            brandEndIndex = matchedBrand.length;
+                        }
+                    }
+                    
+                    if (brandEndIndex === -1) {
+                        brandEndIndex = matchedBrand.length;
+                    }
+                    
+                    // Map position to HTML text with marks
+                    const brandEndIndexHTML = mapPosition(part, brandEndIndex);
+                    
+                    // Split part into brand and model, preserving mark tags
+                    const brandPart = part.substring(0, brandEndIndexHTML);
+                    let modelPart = part.substring(brandEndIndexHTML).trim();
+                    
+                    if (modelPart) {
+                        modelPart = ' ' + modelPart;
+                    }
+                    
+                    // Wrap brand in strong, but preserve any existing mark tags
+                    if (modelPart) {
+                        return `<strong>${brandPart}</strong>${modelPart}`;
+                    } else {
+                        return `<strong>${brandPart}</strong>`;
+                    }
+                }
+                
+                return part;
+            });
+            
+            return formattedParts.join(', ');
+        }
 
         function updateTable() {
             const tbody = document.getElementById('tableBody');
@@ -1449,25 +1700,14 @@
                         categoryCell = `<td class="kategorie">${highlightTextPlain(item.kategorie, currentSearchTerm)}</td>`;
                     }
                     
-                    // First format brands as bold (skip for "vozy Škoda" category)
-                    let formattedBrandModel = formatBrandModelText(item.znacka_typ, item.kategorie);
-                    
-                    // Apply highlighting to formatted text (preserving <strong> tags)
-                    if (currentSearchTerm && formattedBrandModel) {
-                        // Split by <strong> tags to preserve them
-                        const parts = formattedBrandModel.split(/(<strong>.*?<\/strong>)/g);
-                        formattedBrandModel = parts.map(part => {
-                            if (part.startsWith('<strong>')) {
-                                // This is a strong tag - apply highlighting inside it
-                                const innerText = part.replace(/<\/?strong>/g, '');
-                                const highlightedInner = highlightTextPlain(innerText, currentSearchTerm);
-                                return `<strong>${highlightedInner}</strong>`;
-                            } else {
-                                // Regular text - apply highlighting normally
-                                return highlightTextPlain(part, currentSearchTerm);
-                            }
-                        }).join('');
+                    // First apply highlighting to original text
+                    let highlightedText = item.znacka_typ;
+                    if (currentSearchTerm && highlightedText) {
+                        highlightedText = highlightTextPlain(highlightedText, currentSearchTerm);
                     }
+                    
+                    // Then format brands as bold (preserving existing mark tags)
+                    let formattedBrandModel = formatBrandModelTextWithHighlights(highlightedText, item.kategorie);
                     
                     return `
                     <tr${isSkodaCategory ? ` class="skoda-category-row${isLastSkodaRow ? ' skoda-last-row' : ''}"` : ''} style="animation-delay: ${index * 0.02}s;">
@@ -1689,11 +1929,25 @@
                 filteredRPSData = [...cenÝkRPSData];
                 currentRPSSearchTerm = '';
             } else {
-                const normalizedSearchTerm = removeDiacritics(searchTerm);
+                const normalizedSearchTerm = removeDiacritics(searchTerm.toLowerCase());
+                // Split search term into words to search for each word separately
+                // This allows finding "audi a5" in "Audi A4 + A5"
+                const searchWords = normalizedSearchTerm.split(/\s+/).filter(word => word.length > 0);
+                
                 filteredRPSData = cenÝkRPSData.filter(item => {
                     const kategorie = removeDiacritics(item.kategorie.toLowerCase());
                     const znacka = removeDiacritics(item.znacka_typ.toLowerCase());
-                    return kategorie.includes(normalizedSearchTerm) || znacka.includes(normalizedSearchTerm);
+                    const combinedText = kategorie + ' ' + znacka;
+                    
+                    // Check if all search words are present in the combined text
+                    // This allows finding "audi a5" where "audi" is in brand and "a5" is in model
+                    if (searchWords.length > 1) {
+                        // Multiple words - all must be present somewhere in category or brand/model
+                        return searchWords.every(word => combinedText.includes(word));
+                    } else {
+                        // Single word - check if it appears anywhere
+                        return kategorie.includes(normalizedSearchTerm) || znacka.includes(normalizedSearchTerm);
+                    }
                 });
             }
             
@@ -1776,10 +2030,87 @@
             }
             
             const escapedText = escapeHtml(text);
-            const escapedSearchTerm = escapeHtml(searchTerm);
-            const regex = new RegExp(`(${escapeRegex(escapedSearchTerm)})`, 'gi');
+            const normalizedText = removeDiacritics(text.toLowerCase());
+            const normalizedSearchTerm = removeDiacritics(searchTerm.toLowerCase());
             
-            return escapedText.replace(regex, '<mark class="highlight">$1</mark>');
+            // Split search term into words to highlight each word separately
+            const searchWords = normalizedSearchTerm.split(/\s+/).filter(word => word.length > 0);
+            
+            if (searchWords.length === 0) {
+                return escapedText;
+            }
+            
+            // Check if all words are present in text
+            const allWordsPresent = searchWords.every(word => normalizedText.includes(word));
+            if (!allWordsPresent) {
+                return escapedText;
+            }
+            
+            // Helper function to find original position from normalized position
+            function findOriginalPosition(normalizedPos) {
+                let normalizedCount = 0;
+                for (let i = 0; i < escapedText.length; i++) {
+                    const normalizedChar = removeDiacritics(escapedText[i].toLowerCase());
+                    if (normalizedChar && normalizedChar.length > 0) {
+                        if (normalizedCount === normalizedPos) {
+                            return i;
+                        }
+                        normalizedCount++;
+                    }
+                }
+                return escapedText.length;
+            }
+            
+            // Create array to track which positions are already highlighted
+            const highlightedRanges = [];
+            
+            // Find and mark all word matches
+            searchWords.forEach(word => {
+                let searchIndex = 0;
+                while (true) {
+                    const matchIndex = normalizedText.indexOf(word, searchIndex);
+                    if (matchIndex === -1) break;
+                    
+                    const originalStart = findOriginalPosition(matchIndex);
+                    const originalEnd = findOriginalPosition(matchIndex + word.length);
+                    
+                    highlightedRanges.push({ start: originalStart, end: originalEnd });
+                    searchIndex = matchIndex + 1;
+                }
+            });
+            
+            // Sort ranges by start position
+            highlightedRanges.sort((a, b) => a.start - b.start);
+            
+            // Merge overlapping ranges
+            const mergedRanges = [];
+            for (let i = 0; i < highlightedRanges.length; i++) {
+                if (mergedRanges.length === 0 || highlightedRanges[i].start > mergedRanges[mergedRanges.length - 1].end) {
+                    mergedRanges.push({ ...highlightedRanges[i] });
+                } else {
+                    mergedRanges[mergedRanges.length - 1].end = Math.max(
+                        mergedRanges[mergedRanges.length - 1].end,
+                        highlightedRanges[i].end
+                    );
+                }
+            }
+            
+            // Build result with highlights
+            let result = '';
+            let lastIndex = 0;
+            
+            mergedRanges.forEach(range => {
+                // Add text before highlight
+                result += escapedText.substring(lastIndex, range.start);
+                // Add highlighted text
+                result += '<mark class="highlight">' + escapedText.substring(range.start, range.end) + '</mark>';
+                lastIndex = range.end;
+            });
+            
+            // Add remaining text
+            result += escapedText.substring(lastIndex);
+            
+            return result;
         }
         
         function formatBrandModelTextRPS(text, category) {
@@ -1820,6 +2151,133 @@
             return formattedParts.join(', ');
         }
         
+        // Format brand model text for RPS while preserving existing highlights (mark tags)
+        function formatBrandModelTextWithHighlightsRPS(text, category) {
+            if (!text) return '';
+            
+            // Helper function to map position from text without marks to text with marks
+            function mapPosition(textWithMarks, posInPlainText) {
+                let plainPos = 0;
+                let htmlPos = 0;
+                
+                while (plainPos < posInPlainText && htmlPos < textWithMarks.length) {
+                    // Check for opening mark tag
+                    if (textWithMarks.substring(htmlPos).startsWith('<mark')) {
+                        const markEnd = textWithMarks.indexOf('</mark>', htmlPos);
+                        if (markEnd !== -1) {
+                            // Count characters inside mark tag
+                            const markContentStart = textWithMarks.indexOf('>', htmlPos) + 1;
+                            const markContent = textWithMarks.substring(markContentStart, markEnd);
+                            const markContentLength = markContent.length;
+                            
+                            // If we need to go into the mark content
+                            if (plainPos + markContentLength <= posInPlainText) {
+                                plainPos += markContentLength;
+                                htmlPos = markEnd + 7;
+                                continue;
+                            } else {
+                                // We're inside the mark content
+                                const offsetInMark = posInPlainText - plainPos;
+                                return markContentStart + offsetInMark;
+                            }
+                        }
+                    }
+                    
+                    // Check for closing mark tag
+                    if (textWithMarks.substring(htmlPos).startsWith('</mark>')) {
+                        htmlPos += 7;
+                        continue;
+                    }
+                    
+                    // Check for other HTML tags
+                    if (textWithMarks[htmlPos] === '<') {
+                        const tagEnd = textWithMarks.indexOf('>', htmlPos);
+                        if (tagEnd !== -1) {
+                            htmlPos = tagEnd + 1;
+                            continue;
+                        }
+                    }
+                    
+                    // Regular character
+                    plainPos++;
+                    htmlPos++;
+                }
+                
+                return htmlPos;
+            }
+            
+            // Split by comma, but preserve mark tags
+            const parts = text.split(',');
+            const formattedParts = parts.map(part => {
+                part = part.trim();
+                if (!part) return '';
+                
+                // Extract text without mark tags for brand matching
+                const textWithoutMarks = part.replace(/<mark[^>]*>.*?<\/mark>/gi, '');
+                const matchedBrand = findMatchingBrand(textWithoutMarks);
+                
+                if (matchedBrand) {
+                    // Find brand position in plain text
+                    const brandLower = matchedBrand.toLowerCase();
+                    const brandNormalized = normalizeBrand(matchedBrand).toLowerCase();
+                    const textNormalized = normalizeBrand(textWithoutMarks).toLowerCase();
+                    const textLower = textWithoutMarks.toLowerCase();
+                    
+                    let brandEndIndex = -1;
+                    
+                    // Try to find exact brand match position
+                    if (textLower.startsWith(brandLower + ' ')) {
+                        brandEndIndex = matchedBrand.length;
+                    } else if (textLower.startsWith(brandLower)) {
+                        // Brand found but might be followed by model without space
+                        brandEndIndex = matchedBrand.length;
+                    } else if (textNormalized.startsWith(brandNormalized + ' ')) {
+                        // Try to find position using normalized text
+                        for (let i = 1; i <= textWithoutMarks.length; i++) {
+                            const testPart = normalizeBrand(textWithoutMarks.substring(0, i)).toLowerCase();
+                            if (testPart === brandNormalized || testPart === brandNormalized + ' ') {
+                                brandEndIndex = i;
+                                break;
+                            } else if (testPart.length > brandNormalized.length + 1) {
+                                break;
+                            }
+                        }
+                        if (brandEndIndex === -1) {
+                            brandEndIndex = matchedBrand.length;
+                        }
+                    } else if (textNormalized.startsWith(brandNormalized)) {
+                        brandEndIndex = matchedBrand.length;
+                    }
+                    
+                    if (brandEndIndex === -1) {
+                        brandEndIndex = matchedBrand.length;
+                    }
+                    
+                    // Map position to HTML text with marks
+                    const brandEndIndexHTML = mapPosition(part, brandEndIndex);
+                    
+                    // Split part into brand and model, preserving mark tags
+                    const brandPart = part.substring(0, brandEndIndexHTML);
+                    let modelPart = part.substring(brandEndIndexHTML).trim();
+                    
+                    if (modelPart) {
+                        modelPart = ' ' + modelPart;
+                    }
+                    
+                    // Wrap brand in strong, but preserve any existing mark tags
+                    if (modelPart) {
+                        return `<strong>${brandPart}</strong>${modelPart}`;
+                    } else {
+                        return `<strong>${brandPart}</strong>`;
+                    }
+                }
+                
+                return part;
+            });
+            
+            return formattedParts.join(', ');
+        }
+
         function updateRPSTable() {
             const tbody = document.getElementById('tableBodyRPS');
             const noResults = document.getElementById('noResultsRPS');
@@ -1853,20 +2311,14 @@
                 tbody.innerHTML = filteredRPSData.map((item, index) => {
                     let categoryCell = `<td class="kategorie">${highlightTextPlainRPS(item.kategorie, currentRPSSearchTerm)}</td>`;
                     
-                    let formattedBrandModel = formatBrandModelTextRPS(item.znacka_typ, item.kategorie);
-                    
-                    if (currentRPSSearchTerm && formattedBrandModel) {
-                        const parts = formattedBrandModel.split(/(<strong>.*?<\/strong>)/g);
-                        formattedBrandModel = parts.map(part => {
-                            if (part.startsWith('<strong>')) {
-                                const innerText = part.replace(/<\/?strong>/g, '');
-                                const highlightedInner = highlightTextPlainRPS(innerText, currentRPSSearchTerm);
-                                return `<strong>${highlightedInner}</strong>`;
-                            } else {
-                                return highlightTextPlainRPS(part, currentRPSSearchTerm);
-                            }
-                        }).join('');
+                    // First apply highlighting to original text
+                    let highlightedText = item.znacka_typ;
+                    if (currentRPSSearchTerm && highlightedText) {
+                        highlightedText = highlightTextPlainRPS(highlightedText, currentRPSSearchTerm);
                     }
+                    
+                    // Then format brands as bold (preserving existing mark tags)
+                    let formattedBrandModel = formatBrandModelTextWithHighlightsRPS(highlightedText, item.kategorie);
                     
                     return `
                     <tr style="animation-delay: ${index * 0.02}s;">
