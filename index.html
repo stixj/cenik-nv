@@ -72,7 +72,7 @@
             font-family: 'DirectSans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background-color: #f5f5f5;
             color: #333;
-            line-height: 1.6;
+            line-height: 1.7;
             font-weight: 400;
         }
 
@@ -115,34 +115,60 @@
 
         .nav-link {
             font-family: 'DirectSans', sans-serif;
-            color: #1a4d3a;
+            color: #666;
             text-decoration: none;
             font-size: 16px;
             font-weight: 500;
-            padding: 10px 20px;
+            padding: 12px 24px;
             position: relative;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease-in-out;
             border-radius: 8px;
+            background-color: transparent;
+            cursor: pointer;
+            box-shadow: none;
+            transform: translateY(0);
+        }
+        
+        .nav-link:active {
+            transform: translateY(0) scale(0.97);
         }
 
         .nav-link::after {
             display: none;
         }
 
-        .nav-link.active {
+        .nav-link:hover {
             color: #004033;
-            background-color: #cbdc4d;
-            font-weight: 600;
-            border-radius: 8px;
+            background-color: rgba(185, 207, 0, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 64, 51, 0.1);
         }
 
-        .nav-link:not(.active):hover {
+        .nav-link.active {
             color: #004033;
+            background: linear-gradient(135deg, #C4DE00 0%, #B9CF00 100%);
+            font-weight: 600;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 64, 51, 0.15), 0 2px 3px rgba(0, 0, 0, 0.05);
+            transform: translateY(0);
+            position: relative;
+        }
+        
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(to right, #C4DE00, #B8CA00);
+            border-radius: 0 0 8px 8px;
         }
 
         .nav-link.active:hover {
-            background-color: #b8c93f;
+            background: linear-gradient(135deg, #C4DE00 0%, #B9CF00 100%);
             color: #004033;
+            transform: translateY(0);
         }
 
         /* Main Content */
@@ -150,25 +176,196 @@
             max-width: 1400px;
             margin: 40px auto;
             padding: 40px;
-            background-color: #ffffff;
+            background: linear-gradient(to bottom, #FFFFFF, #FAFAFA);
             border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 4px 16px rgba(0, 64, 51, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
         }
 
         .page-title {
             font-family: 'DirectSans', sans-serif;
-            font-size: 36px;
+            font-size: 32px;
             font-weight: 700;
-            color: #1a4d3a;
-            margin-bottom: 10px;
+            color: #004033;
+            text-align: center;
+            margin-bottom: 28px;
+            line-height: 1.3;
+            letter-spacing: -0.5px;
+            position: relative;
+        }
+        
+        .page-title::after {
+            content: "";
+            display: block;
+            width: 80px;
+            height: 3px;
+            background-color: #C4DE00;
+            margin: 10px auto 0;
+            border-radius: 2px;
         }
 
         .page-subtitle {
             font-family: 'DirectSans', sans-serif;
             font-size: 18px;
-            font-weight: 400;
-            color: #666;
+            font-weight: 500;
+            color: #555;
             margin-bottom: 40px;
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        /* Nested Tabs Navigation */
+        .tabs-navigation {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 0;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 0;
+            position: relative;
+        }
+
+        .tab-button {
+            font-family: 'DirectSans', sans-serif;
+            padding: 14px 28px;
+            background-color: #FFFFFF;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: #666;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            position: relative;
+            border-radius: 8px 8px 0 0;
+            box-shadow: none;
+            transform: translateY(0);
+            margin-bottom: 0;
+        }
+        
+        .tab-button:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        .tab-button:hover {
+            color: #004033 !important;
+            background-color: rgba(185, 207, 0, 0.15) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 64, 51, 0.1);
+        }
+
+        .tab-button.active {
+            color: #004033;
+            border-bottom: none;
+            background-color: rgba(196, 222, 0, 0.2);
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0, 64, 51, 0.15), 0 2px 3px rgba(0, 0, 0, 0.05);
+            transform: translateY(0);
+            z-index: 2;
+            margin-bottom: -2px;
+            position: relative;
+        }
+        
+        .tab-button.active:hover {
+            background-color: rgba(196, 222, 0, 0.25) !important;
+            color: #004033 !important;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 64, 51, 0.2), 0 3px 8px rgba(0, 0, 0, 0.08);
+        }
+        
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(to right, #C4DE00, #B8CA00);
+            border-radius: 0;
+        }
+
+        .tab-content {
+            display: none;
+            margin-top: 0;
+            padding-top: 30px;
+            background-color: #FAFAFA;
+            border-radius: 0 0 12px 12px;
+            opacity: 0;
+            transform: translateY(5px);
+            transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+        }
+
+        .tab-content.active {
+            display: block;
+            border-top: 2px solid #C4DE00;
+            background: linear-gradient(to bottom, #FFFFFF, #FAFAFA);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+            opacity: 1;
+            transform: translateY(0);
+            animation: fadeInUp 0.2s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Historical Price Lists */
+        .historical-price-lists {
+            padding: 20px 0;
+        }
+
+        .historical-price-lists h3 {
+            font-family: 'DirectSans', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: #004033;
+            margin-bottom: 24px;
+            line-height: 1.4;
+            letter-spacing: -0.3px;
+        }
+
+        .price-list-links {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .price-list-link {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            background: linear-gradient(to right, #FFFFFF, #FAFAFA);
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #004033;
+            font-family: 'DirectSans', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+        }
+
+        .price-list-link:hover {
+            background-color: rgba(185, 207, 0, 0.15);
+            border-color: #b9cf00;
+            transform: translateX(5px);
+            box-shadow: 0 4px 8px rgba(0, 64, 51, 0.1);
+        }
+        
+        .price-list-link:active {
+            transform: translateX(3px) scale(0.98);
+        }
+
+        .price-list-link::before {
+            content: '📄';
+            margin-right: 12px;
+            font-size: 20px;
         }
 
         .controls {
@@ -192,30 +389,79 @@
             border-radius: 8px;
             font-size: 16px;
             font-weight: 400;
-            transition: all 0.3s;
+            transition: all 0.2s ease-in-out;
         }
 
         .search-box input:focus {
             outline: none;
-            border-color: #cbdc4d;
-            box-shadow: 0 0 0 3px rgba(203, 220, 77, 0.2);
+            border-color: #C4DE00;
+            box-shadow: 0 0 0 3px rgba(196, 222, 0, 0.2);
+            transform: translateY(-1px);
+        }
+        
+        .search-box input:hover {
+            border-color: #b9cf00;
         }
 
         .results-info {
             font-family: 'DirectSans', sans-serif;
             margin-bottom: 20px;
-            color: #666;
+            color: #555;
             font-size: 14px;
-            font-weight: 400;
-            padding: 10px 15px;
-            background-color: #f8f9fa;
+            font-weight: 500;
+            padding: 12px 18px;
+            background: linear-gradient(to right, #FAFAFA, #FFFFFF);
             border-radius: 8px;
             display: inline-block;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+            transition: all 0.2s ease-in-out;
+            animation: fadeInScale 0.3s ease-in-out;
+        }
+        
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
         /* Table */
         .table-container {
             overflow: hidden;
+            position: relative;
+            transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+        }
+        
+        .table-container.fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        tbody {
+            animation: slideInTable 0.4s ease-in-out;
+        }
+        
+        @keyframes slideInTable {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         table {
@@ -225,21 +471,23 @@
         }
 
         thead {
-            background-color: #cbdc4d;
+            background: linear-gradient(to bottom, #C4DE00, #B9CF00);
             color: #004033;
             border-radius: 8px 8px 0 0;
             overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 64, 51, 0.1);
         }
 
         th {
             font-family: 'DirectSans', sans-serif;
             padding: 18px 20px;
             text-align: left;
-            font-weight: 600;
+            font-weight: 700;
             font-size: 14px;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
             border: none;
             position: relative;
+            line-height: 1.5;
         }
         
         /* Subtle divider lines in header - not full width */
@@ -272,7 +520,9 @@
             padding: 16px 20px;
             border: none;
             position: relative;
-            font-weight: 400;
+            font-weight: 500;
+            color: #333;
+            line-height: 1.6;
         }
         
         /* Subtle divider lines - not full width, elegant spacing */
@@ -321,11 +571,34 @@
         }
 
         tbody tr {
-            transition: background-color 0.2s;
+            transition: all 0.2s ease-in-out;
+            animation: fadeInRow 0.3s ease-in-out;
+        }
+        
+        @keyframes fadeInRow {
+            from {
+                opacity: 0;
+                transform: translateX(-5px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
         tbody tr:hover {
-            background-color: #f8f9fa;
+            background-color: rgba(185, 207, 0, 0.08) !important;
+            box-shadow: inset 0 0 0 1px rgba(196, 222, 0, 0.2);
+            transform: translateX(2px);
+        }
+        
+        tbody tr:nth-child(even) {
+            background-color: #FAFAFA;
+        }
+
+        tbody tr:nth-child(even):hover {
+            background-color: rgba(185, 207, 0, 0.12) !important;
+            box-shadow: inset 0 0 0 1px rgba(196, 222, 0, 0.25);
         }
 
         /* Highlight search results */
@@ -337,13 +610,6 @@
             border-radius: 3px;
         }
 
-        tbody tr:nth-child(even) {
-            background-color: #fafafa;
-        }
-
-        tbody tr:nth-child(even):hover {
-            background-color: #f0f0f0;
-        }
         
         /* Remove background color for Skoda category rows in first column */
         tbody tr.skoda-category-row td:first-child {
@@ -364,8 +630,9 @@
 
         .kategorie {
             font-family: 'DirectSans', sans-serif;
-            font-weight: 600;
-            color: #1a4d3a;
+            font-weight: 700;
+            color: #004033;
+            letter-spacing: 0.2px;
         }
 
         .znacka-typ {
@@ -397,6 +664,7 @@
             font-weight: 400;
             background-color: #f8f9fa;
             border-radius: 8px;
+            animation: fadeInScale 0.4s ease-in-out;
         }
 
         .footer-text {
@@ -443,6 +711,24 @@
                 font-size: 28px;
             }
 
+            .tabs-navigation {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .tab-button {
+                padding: 12px 16px;
+                font-size: 14px;
+                flex: 1;
+                min-width: calc(33.333% - 6px);
+                border-radius: 8px 8px 0 0;
+            }
+            
+            .tab-button:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 2px 6px rgba(0, 64, 51, 0.1);
+            }
+
             .controls {
                 flex-direction: column;
             }
@@ -484,38 +770,94 @@
         <h1 class="page-title">Ceník náhradních vozidel</h1>
         <p class="page-subtitle">Přehled cen za pronájem náhradních vozidel podle kategorií</p>
         
-        <div class="controls">
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Vyhledat podle kategorie, značky nebo typu vozidla...">
+        <!-- Nested Tabs Navigation -->
+        <div class="tabs-navigation">
+            <button class="tab-button active" data-tab="direct">Ceník Direct</button>
+            <button class="tab-button" data-tab="rps">Ceník RPS</button>
+            <button class="tab-button" data-tab="historical">Historické ceníky</button>
+        </div>
+
+        <!-- Tab Content: Ceník Direct -->
+        <div class="tab-content active" id="tab-direct">
+            <div class="controls">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Vyhledat podle kategorie, značky nebo typu vozidla...">
+                </div>
+            </div>
+
+            <div class="results-info" id="resultsInfo"></div>
+
+            <div class="table-container">
+                <table id="dataTable">
+                    <thead>
+                        <tr>
+                            <th>Kategorie</th>
+                            <th>Značka a model vozidla</th>
+                            <th>1-10 dní (Kč bez DPH)</th>
+                            <th>11-30 dní (Kč bez DPH)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                    </tbody>
+                </table>
+                <div class="no-results" id="noResults" style="display: none;">
+                    Žádné výsledky nenalezeny
+                </div>
+            </div>
+            
+            <div class="footer-text">
+                <h3 style="font-family: 'DirectSans', sans-serif; font-size: 14px; font-weight: 600; color: #666; margin-bottom: 10px; margin-top: 0;">Doplňující informace</h3>
+                Všechny denní sazby jsou bez odpočtu pevných nákladů (z této částky už tedy nebudeme odečítat náklady za opotřebení poškozeného vozidla).<br>
+                Ceny nezahrnují pohonné hmoty a případnou spoluúčast za poškození vozidla.<br>
+                Pokud je vaše poškozené auto starší než 8 let, sazba za půjčení náhradního auta se o jednu třídu sníží.<br>
+                Cenu půjčovného nad 30 dní je nutné konzultovat s likvidátorem dané škodní události.
             </div>
         </div>
 
-        <div class="results-info" id="resultsInfo"></div>
+        <!-- Tab Content: Ceník RPS -->
+        <div class="tab-content" id="tab-rps">
+            <div class="controls">
+                <div class="search-box">
+                    <input type="text" id="searchInputRPS" placeholder="Vyhledat podle kategorie, značky nebo typu vozidla...">
+                </div>
+            </div>
 
-        <div class="table-container">
-            <table id="dataTable">
-                <thead>
-                    <tr>
-                        <th>Kategorie</th>
-                        <th>Značka a model vozidla</th>
-                        <th>1-10 dní (Kč bez DPH)</th>
-                        <th>11-30 dní (Kč bez DPH)</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody">
-                </tbody>
-            </table>
-            <div class="no-results" id="noResults" style="display: none;">
-                Žádné výsledky nenalezeny
+            <div class="results-info" id="resultsInfoRPS"></div>
+
+            <div class="table-container">
+                <table id="dataTableRPS">
+                    <thead>
+                        <tr>
+                            <th>Kategorie</th>
+                            <th>Značka a model vozidla</th>
+                            <th>do 14 dnů (Kč bez DPH)</th>
+                            <th>nad 14 dnů (Kč bez DPH)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBodyRPS">
+                    </tbody>
+                </table>
+                <div class="no-results" id="noResultsRPS" style="display: none;">
+                    Žádné výsledky nenalezeny
+                </div>
+            </div>
+            
+            <div class="footer-text">
+                <h3 style="font-family: 'DirectSans', sans-serif; font-size: 14px; font-weight: 600; color: #666; margin-bottom: 10px; margin-top: 0;">Doplňující informace</h3>
+                Všechny sazby jsou uvedeny v Kč bez DPH. Při zapůjčení vozidla staršího 10-ti let odečteme 20 % tabulkové ceny.<br>
+                Účelnost zapůjčení NV ve vztahu k ujetým km se posuzuje individuálně dle jednotlivých případů.<br>
+                Zapůjčení náhradního vozidla nad 30 dnů je nutné prokonzultovat s likvidátorem.
             </div>
         </div>
 
-        <div class="footer-text">
-            <h3 style="font-family: 'DirectSans', sans-serif; font-size: 14px; font-weight: 600; color: #666; margin-bottom: 10px; margin-top: 0;">Doplňující informace</h3>
-            Všechny denní sazby jsou bez odpočtu pevných nákladů (z této částky už tedy nebudeme odečítat náklady za opotřebení poškozeného vozidla).<br>
-            Ceny nezahrnují pohonné hmoty a případnou spoluúčast za poškození vozidla.<br>
-            Pokud je vaše poškozené auto starší než 8 let, sazba za půjčení náhradního auta se o jednu třídu sníží.<br>
-            Cenu půjčovného nad 30 dní je nutné konzultovat s likvidátorem dané škodní události.
+        <!-- Tab Content: Historické ceníky -->
+        <div class="tab-content" id="tab-historical">
+            <div class="historical-price-lists">
+                <h3>Dostupné historické ceníky</h3>
+                <div class="price-list-links" id="historicalPriceLists">
+                    <!-- Links will be added dynamically from JavaScript -->
+                </div>
+            </div>
         </div>
     </main>
 
@@ -901,58 +1243,58 @@
             'Toyota', 'Volkswagen', 'Volvo'
         ];
 
+        // Helper function to normalize brand name (global for use in both Direct and RPS)
+        function normalizeBrand(brandName) {
+            return brandName
+                .replace(/-/g, ' ')
+                .replace(/\s+/g, ' ')
+                .trim();
+        }
+        
+        // Helper function to find matching brand at the start of text (global for use in both Direct and RPS)
+        function findMatchingBrand(part) {
+            const partLower = part.toLowerCase();
+            
+            // Try exact match first
+            for (const brand of vehicleBrands) {
+                const brandLower = brand.toLowerCase();
+                const brandNormalized = normalizeBrand(brand).toLowerCase();
+                const partNormalized = normalizeBrand(part).toLowerCase();
+                
+                // Check if part starts with brand name (with space after)
+                if (partLower.startsWith(brandLower + ' ') || 
+                    partNormalized.startsWith(brandNormalized + ' ') ||
+                    partLower === brandLower) {
+                    return brand;
+                }
+            }
+            
+            // If no exact match, try to extract brand from beginning of part
+            for (const brand of vehicleBrands) {
+                const brandLower = brand.toLowerCase();
+                const brandWords = brandLower.split(/\s+/);
+                const partWords = partLower.split(/\s+/);
+                
+                // Check if first word(s) match brand
+                let matches = true;
+                for (let i = 0; i < brandWords.length && i < partWords.length; i++) {
+                    if (partWords[i] !== brandWords[i]) {
+                        matches = false;
+                        break;
+                    }
+                }
+                
+                if (matches && partWords.length > brandWords.length) {
+                    return brand;
+                }
+            }
+            
+            return null;
+        }
+
         // Format brand and model text - make brands bold
         function formatBrandModelText(text, category) {
             if (!text) return '';
-            
-            // Helper function to normalize brand name
-            function normalizeBrand(brandName) {
-                return brandName
-                    .replace(/-/g, ' ')
-                    .replace(/\s+/g, ' ')
-                    .trim();
-            }
-            
-            // Helper function to find matching brand at the start of text
-            function findMatchingBrand(part) {
-                const partLower = part.toLowerCase();
-                
-                // Try exact match first
-                for (const brand of vehicleBrands) {
-                    const brandLower = brand.toLowerCase();
-                    const brandNormalized = normalizeBrand(brand).toLowerCase();
-                    const partNormalized = normalizeBrand(part).toLowerCase();
-                    
-                    // Check if part starts with brand name (with space after)
-                    if (partLower.startsWith(brandLower + ' ') || 
-                        partNormalized.startsWith(brandNormalized + ' ') ||
-                        partLower === brandLower) {
-                        return brand;
-                    }
-                }
-                
-                // If no exact match, try to extract brand from beginning of part
-                for (const brand of vehicleBrands) {
-                    const brandLower = brand.toLowerCase();
-                    const brandWords = brandLower.split(/\s+/);
-                    const partWords = partLower.split(/\s+/);
-                    
-                    // Check if first word(s) match brand
-                    let matches = true;
-                    for (let i = 0; i < brandWords.length && i < partWords.length; i++) {
-                        if (partWords[i] !== brandWords[i]) {
-                            matches = false;
-                            break;
-                        }
-                    }
-                    
-                    if (matches && partWords.length > brandWords.length) {
-                        return brand;
-                    }
-                }
-                
-                return null;
-            }
             
             // Special handling for "vozy Škoda" - skip formatting
             if (category && category.toLowerCase().includes('škoda')) {
@@ -1055,11 +1397,24 @@
             const tbody = document.getElementById('tableBody');
             const noResults = document.getElementById('noResults');
             const resultsInfo = document.getElementById('resultsInfo');
+            const tableContainer = document.querySelector('.table-container');
+            
+            // Add fade animation to table container
+            if (tableContainer) {
+                tableContainer.style.opacity = '0.5';
+                tableContainer.style.transform = 'translateY(5px)';
+            }
             
             if (filteredData.length === 0) {
                 tbody.innerHTML = '';
                 noResults.style.display = 'block';
                 resultsInfo.textContent = '';
+                if (tableContainer) {
+                    setTimeout(() => {
+                        tableContainer.style.opacity = '1';
+                        tableContainer.style.transform = 'translateY(0)';
+                    }, 100);
+                }
             } else {
                 noResults.style.display = 'none';
                 resultsInfo.textContent = `Nalezeno ${filteredData.length} ${filteredData.length === 1 ? 'záznam' : filteredData.length < 5 ? 'záznamy' : 'záznamů'}`;
@@ -1109,7 +1464,7 @@
                     }
                     
                     return `
-                    <tr${isSkodaCategory ? ` class="skoda-category-row${isLastSkodaRow ? ' skoda-last-row' : ''}"` : ''}>
+                    <tr${isSkodaCategory ? ` class="skoda-category-row${isLastSkodaRow ? ' skoda-last-row' : ''}"` : ''} style="animation-delay: ${index * 0.02}s;">
                         ${categoryCell}
                         <td class="znacka-typ">${formattedBrandModel}</td>
                         <td class="cena">${item.cena_1_10_dni.toLocaleString('cs-CZ')} Kč</td>
@@ -1117,11 +1472,428 @@
                     </tr>
                 `;
                 }).join('');
+                
+                // Restore table container opacity after content is loaded
+                if (tableContainer) {
+                    setTimeout(() => {
+                        tableContainer.style.opacity = '1';
+                        tableContainer.style.transform = 'translateY(0)';
+                    }, 100);
+                }
             }
         }
 
         // Initial load
         sortData('kategorie', 'asc');
+        
+        // ============================================
+        // Tab Switching Functionality
+        // ============================================
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const targetTab = button.getAttribute('data-tab');
+                
+                // Remove active class from all buttons and contents
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                tabContents.forEach(content => {
+                    content.classList.remove('active');
+                    // Force reflow for smooth transition
+                    void content.offsetHeight;
+                });
+                
+                // Add active class to clicked button and corresponding content
+                button.classList.add('active');
+                const targetContent = document.getElementById(`tab-${targetTab}`);
+                if (targetContent) {
+                    // Use requestAnimationFrame for smoother transition
+                    requestAnimationFrame(() => {
+                        targetContent.classList.add('active');
+                        
+                        // If switching to RPS tab, ensure table is updated
+                        if (targetTab === 'rps' && typeof updateRPSTable === 'function') {
+                            // Small delay to ensure DOM is updated
+                            setTimeout(() => {
+                                updateRPSTable();
+                            }, 10);
+                        }
+                    });
+                }
+            });
+        });
+
+        // ============================================
+        // Historical Price Lists - Easy to extend
+        // ============================================
+        const historicalPriceLists = [
+            { year: '2023', url: 'Historické ceníky/Ceník NV od 1-3-2023.pdf', filename: 'Ceník NV od 1-3-2023.pdf' },
+            { year: '2018', url: 'Historické ceníky/Ceník NV 2018 pro SSE a RPS.pdf', filename: 'Ceník NV 2018 pro SSE a RPS.pdf' },
+            { year: '2018', url: 'Historické ceníky/Ceník NV do 22-1-2018.PDF', filename: 'Ceník NV do 22-1-2018.pdf' },
+            { year: '2018', url: 'Historické ceníky/Ceník NV od 23-1-2018.pdf', filename: 'Ceník NV od 23-1-2018.pdf' }
+            // Add more years here as needed - only add files that exist in "Historické ceníky" folder
+        ];
+
+        function renderHistoricalPriceLists() {
+            const container = document.getElementById('historicalPriceLists');
+            if (!container) return;
+
+            if (historicalPriceLists.length === 0) {
+                container.innerHTML = '<p style="color: #666; padding: 20px;">Žádné historické ceníky nejsou k dispozici.</p>';
+                return;
+            }
+
+            container.innerHTML = historicalPriceLists.map(item => {
+                const displayUrl = item.url || `Ceník NV ${item.year}.pdf`;
+                const filename = item.filename || `Ceník NV ${item.year}.pdf`;
+                return `<a href="${displayUrl}" class="price-list-link" target="_blank" rel="noopener noreferrer">${filename}</a>`;
+            }).join('');
+        }
+
+        // Render historical price lists on page load
+        renderHistoricalPriceLists();
+        
+        // ============================================
+        // Ceník RPS - Visual display only (not used in calculation)
+        // ============================================
+        
+        // Data from RPS price list (from Excel)
+        const cenÝkRPSData = [
+            {
+                "kategorie": "Malé",
+                "znacka_typ": "Škoda Citigo, Volkswagen Fox + Up, Ford Ka, Renault Twingo, Hyundai i10, Kia Picanto, Peugeot 106 + 107 + 108, Citroen C1 + C-Zero, Opel Agila + Adam, Toyota Aygo, Chevrolet Spark, Seat Mii, Nissan Micra, Fiat Panda + 500, Honda Jazz, Suzuki Alto + Splash, Smart",
+                "cena_1_10_dni": 770,
+                "cena_11_30_dni": 440
+            },
+            {
+                "kategorie": "Nižší střední",
+                "znacka_typ": "Škoda Fabia + Roomster, Volkswagen Polo, Ford Fiesta + Fusion + B-Max, Toyota Yaris, Hyundai i20 + ix20 + Getz, Renault Clio + Thalia + Modus + Captur, Kia Rio, Peugeot 206 + 207 + 208, Opel Corsa + Mokka, Citroen C2 + C3 + C3 Picasso, Seat Ibiza, Chevrolet Aveo + Trax, Fiat Punto, Mitsubishi Colt, Mazda 2, Honda City, Nissan Note, Suzuki Swift + Splash, Audi A1, Mini Man, Alfa Romeo MiTo, Lancia Ypsilon, Dacia Logan + Sandero + Lodgy",
+                "cena_1_10_dni": 770,
+                "cena_11_30_dni": 550
+            },
+            {
+                "kategorie": "Střední",
+                "znacka_typ": "Škoda Octavia I + Octavia Tour + Rapid, Volkswagen Golf + Jetta + Beatle, Ford Focus, Kia Ceed, Renault Megane + Fluence, Audi A3, BMW 1, Mercedes-Benz A, Seat Leon + Toledo + Cordoba, Mazda 3, Toyota Auris + Corolla, Volvo C30, Fiat Brava + Bravo + Linea + Stilo + Sedici, Suzuki Jimny, Chevrolet Cruze + Lacetti, Honda Civic, Nissan Almera, Audi TT, Mini Cooper Country Man, Alfa Romeo Giulietta",
+                "cena_1_10_dni": 935,
+                "cena_11_30_dni": 825
+            },
+            {
+                "kategorie": "Vyšší střední",
+                "znacka_typ": "Škoda Superb I + Octavia II + Octavia III + Octavia IV, Ford Mondeo, Renault Laguna +Talisman, Peugeot 407 + 4008, Hyundai i40 + ix 35 + Tuscon, Citroen C5 + C4 Aircross, Opel Insignia + Vectra, Toyota Avensis + Prius, Audi A4, Mercedes-Benz B + C, Volvo S40 + V50, Volkswagen Scirocco, Seat Exeo, Chevrolet Malibu + Epica + Cruze, Suzuki Kizashi, Fiat Croma + Marea, Nissan Primera + Qashqai, Kia Carens, Honda Accord + Insight, Subaru Impreza, Mitsubishi ASX, Dodge Caliber, Lancia Delta, Saab 9-3",
+                "cena_1_10_dni": 1320,
+                "cena_11_30_dni": 990
+            },
+            {
+                "kategorie": "Vyšší",
+                "znacka_typ": "Škoda Superb II + Superb III, Volkswagen Passat, Audi A5, Mercedes-Benz E + B, Citroen C6, Peugeot 507 + 508 + 607, Mazda 6, Renault Latitude, Kia Magentis + Optima, Hyundai Sonata, Subaru Legacy, Honda Legend, Volvo S60 + S80 + V60 + V70, Lexus GS, Chevrolet Camaro, Alfa Romeo 166, Lancia Thema, Saab 9-5, Cadillac BLS, Chrysler 300",
+                "cena_1_10_dni": 1760,
+                "cena_11_30_dni": 1430
+            },
+            {
+                "kategorie": "Střední luxusní",
+                "znacka_typ": "Audi A6, Jaguar XF, BMW 5",
+                "cena_1_10_dni": 3300,
+                "cena_11_30_dni": 2750
+            },
+            {
+                "kategorie": "Luxusní",
+                "znacka_typ": "Audi A8, Mercedes-Benz S + R, BMW 7, Volkswagen Phaeton, Lexus LS, Jaguar XJ + XK, Hyundai Equus",
+                "cena_1_10_dni": 3850,
+                "cena_11_30_dni": 3360
+            },
+            {
+                "kategorie": "Malé MPV",
+                "znacka_typ": "Ford C-Max, Renault Kangoo + Scenic, Kia Venga, Peugeot 3008, Citroen C4 Picasso + Nemo, Opel Meriva, Hyundai Matrix, Toyota Verso + Urban + Cruiser, Fiat Qubo + Dobló Panorama, Dacia Logan + MCV",
+                "cena_1_10_dni": 880,
+                "cena_11_30_dni": 770
+            },
+            {
+                "kategorie": "Velké MPV",
+                "znacka_typ": "Volkswagen Sharan + Touran, Ford S-Max, Galaxy, Renault Espace, Opel Zafira, Peugeot 5008 + 807, Citroen C8 + C4 Grand Picasso, Seat Alhambra + Altea + Altea XL, Chevrolet Orlando, Hyundai Trajet, Nissan Evalia, Chrysler Voyager",
+                "cena_1_10_dni": 1650,
+                "cena_11_30_dni": 1320
+            },
+            {
+                "kategorie": "Malé SUV",
+                "znacka_typ": "Škoda Yeti + Karoq, Renault Captur, Opel Mokka, Hyundai ix35, Kia Sportage + Soul, Suzuki SX4, Dacia Duster, Mitsubishi ASX, Peugeot 2008, Nissan Juke, Chevrolet Trax, BMW 2",
+                "cena_1_10_dni": 1320,
+                "cena_11_30_dni": 990
+            },
+            {
+                "kategorie": "Běžné SUV",
+                "znacka_typ": "Volkswagen Tiguan + Amarok, Ford Ranger, Hyundai Santa Fe + IX55, Peugeot 4007, Kia Sorento, Citroen C-Crosser, Renault Koleos, Opel Antara, BMW X1, Toyota RAV4 + Hilux, Chevrolet Captiva, Suzuki Grand Vitara, Fiat Freemont, Mitsubishi Outlander + Pajero + L200, Honda CR-V, Mercedes-Benz GLA, Nissan X-Trail + Murano + Navara + NP 300 + Pathfinder, Mazda CX-5 + CX-7, Audi Q3, Subaru XV + Forester + Outback, Land Rover Defender + Freelander, Škoda Kodiaq",
+                "cena_1_10_dni": 1760,
+                "cena_11_30_dni": 1540
+            },
+            {
+                "kategorie": "Střední SUV",
+                "znacka_typ": "Audi Q5, Mercedes-Benz GLK, BMW X3, Volvo XC60 + XC70, Range Rover Evoque, Ford Ranger, Infinity EX, Isuzu DMax, Mazda BT",
+                "cena_1_10_dni": 2420,
+                "cena_11_30_dni": 2090
+            },
+            {
+                "kategorie": "Luxusní SUV",
+                "znacka_typ": "Volkswagen Touareg, Audi Q7, Mercedes-Benz GL + ML, BMW X5 + X6, Volvo XC90, Toyota Land Cruiser, Range Rover Sport, Land Rover Discovery, Jeep Grand Cherokee, Lexus RX, Infinity FX, Hyundai Grand Santa Fe, Porsche Cayenne",
+                "cena_1_10_dni": 3300,
+                "cena_11_30_dni": 2750
+            },
+            {
+                "kategorie": "Malé užitkové",
+                "znacka_typ": "Volkswagen Caddy, Ford Tourneo + Transit Connect, Renault Kangoo Express, Peugeot Partner Tepee, Citroen Berlingo, Mercedes-Benz Citan, Opel Combo, Dacia Logan Van, Fiat Doblo + Fiorino",
+                "cena_1_10_dni": 880,
+                "cena_11_30_dni": 770
+            },
+            {
+                "kategorie": "Střední užitkové",
+                "znacka_typ": "Volkswagen Transporter, Ford Transit, Renault Trafic, Hyundai H-1, Peugeot Boxer, Citroen Jumper + Jumpy, Opel Vivaro, Mercedes-Benz Vito + Sprinter, Fiat Scudo + Ducato, Iveco Daily, Toyota Proace",
+                "cena_1_10_dni": 1540,
+                "cena_11_30_dni": 1100
+            },
+            {
+                "kategorie": "Velké užitkové",
+                "znacka_typ": "Volkswagen Crafter, Renault Master, Peugeot Boxer, Citroen Jumper, Opel Movano, Mercedes-Benz Sprinter, Fiat Ducato, Iveco Daily, Hyundai H 350",
+                "cena_1_10_dni": 1650,
+                "cena_11_30_dni": 1320
+            },
+            {
+                "kategorie": "Vícemístné užitkové - 8+1",
+                "znacka_typ": "Volkswagen Multivan + Caravelle + California, Opel Vivaro, Peugeot Expert Tepee, Citroen Jumper Bus, Mercedes-Benz Viano, Fiat Ducato Minibus, Ford Transit Minibus",
+                "cena_1_10_dni": 1980,
+                "cena_11_30_dni": 1650
+            }
+        ];
+        
+        let filteredRPSData = [...cenÝkRPSData];
+        let currentRPSSort = { field: 'kategorie', direction: 'asc' };
+        let currentRPSSearchTerm = '';
+        
+        // Search functionality for RPS
+        const searchInputRPS = document.getElementById('searchInputRPS');
+        if (searchInputRPS) {
+            searchInputRPS.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase().trim();
+                currentRPSSearchTerm = this.value.trim();
+                filterRPSData(searchTerm);
+            });
+        }
+        
+        function filterRPSData(searchTerm) {
+            if (!searchTerm) {
+                filteredRPSData = [...cenÝkRPSData];
+                currentRPSSearchTerm = '';
+            } else {
+                filteredRPSData = cenÝkRPSData.filter(item => {
+                    const kategorie = item.kategorie.toLowerCase();
+                    const znacka = item.znacka_typ.toLowerCase();
+                    return kategorie.includes(searchTerm) || znacka.includes(searchTerm);
+                });
+            }
+            
+            const [field, direction] = ['kategorie', 'asc'];
+            sortRPSData(field, direction);
+        }
+        
+        // Category order from Excel file
+        const rpsCategoryOrder = [
+            'Malé',
+            'Nižší střední',
+            'Střední',
+            'Vyšší střední',
+            'Vyšší',
+            'Střední luxusní',
+            'Luxusní',
+            'Malé MPV',
+            'Velké MPV',
+            'Malé SUV',
+            'Běžné SUV',
+            'Střední SUV',
+            'Luxusní SUV',
+            'Malé užitkové',
+            'Střední užitkové',
+            'Velké užitkové',
+            'Vícemístné užitkové - 8+1'
+        ];
+        
+        function sortRPSData(field, direction) {
+            currentRPSSort = { field, direction };
+            
+            filteredRPSData.sort((a, b) => {
+                let aVal, bVal;
+                
+                switch(field) {
+                    case 'kategorie':
+                        // Sort by predefined order from Excel
+                        const aIndex = rpsCategoryOrder.indexOf(a.kategorie);
+                        const bIndex = rpsCategoryOrder.indexOf(b.kategorie);
+                        if (aIndex === -1 && bIndex === -1) {
+                            return a.kategorie.localeCompare(b.kategorie);
+                        }
+                        if (aIndex === -1) return 1;
+                        if (bIndex === -1) return -1;
+                        return direction === 'asc' ? aIndex - bIndex : bIndex - aIndex;
+                    case 'znacka':
+                        aVal = a.znacka_typ;
+                        bVal = b.znacka_typ;
+                        break;
+                    case 'cena1':
+                        aVal = a.cena_1_10_dni;
+                        bVal = b.cena_1_10_dni;
+                        break;
+                    case 'cena2':
+                        aVal = a.cena_11_30_dni;
+                        bVal = b.cena_11_30_dni;
+                        break;
+                    default:
+                        return 0;
+                }
+                
+                if (typeof aVal === 'string') {
+                    aVal = aVal.toLowerCase();
+                    bVal = bVal.toLowerCase();
+                }
+                
+                if (direction === 'asc') {
+                    return aVal > bVal ? 1 : aVal < bVal ? -1 : 0;
+                } else {
+                    return aVal < bVal ? 1 : aVal > bVal ? -1 : 0;
+                }
+            });
+            
+            updateRPSTable();
+        }
+        
+        function highlightTextPlainRPS(text, searchTerm) {
+            if (!searchTerm || !text) {
+                return escapeHtml(text);
+            }
+            
+            const escapedText = escapeHtml(text);
+            const escapedSearchTerm = escapeHtml(searchTerm);
+            const regex = new RegExp(`(${escapeRegex(escapedSearchTerm)})`, 'gi');
+            
+            return escapedText.replace(regex, '<mark class="highlight">$1</mark>');
+        }
+        
+        function formatBrandModelTextRPS(text, category) {
+            if (!text) return '';
+            
+            // For RPS, we can use the same formatting as Direct
+            // Split by comma to get individual entries
+            const parts = text.split(',');
+            const formattedParts = parts.map(part => {
+                part = part.trim();
+                if (!part) return '';
+                
+                const matchedBrand = findMatchingBrand(part);
+                if (matchedBrand) {
+                    const brandLower = matchedBrand.toLowerCase();
+                    const partLower = part.toLowerCase();
+                    
+                    let brandEndIndex = matchedBrand.length;
+                    if (partLower.startsWith(brandLower + ' ')) {
+                        brandEndIndex = matchedBrand.length;
+                    }
+                    
+                    let modelPart = part.substring(brandEndIndex).trim();
+                    if (modelPart) {
+                        modelPart = ' ' + modelPart;
+                    }
+                    
+                    if (modelPart) {
+                        return `<strong>${matchedBrand}</strong>${modelPart}`;
+                    } else {
+                        return `<strong>${matchedBrand}</strong>`;
+                    }
+                }
+                
+                return part;
+            });
+            
+            return formattedParts.join(', ');
+        }
+        
+        function updateRPSTable() {
+            const tbody = document.getElementById('tableBodyRPS');
+            const noResults = document.getElementById('noResultsRPS');
+            const resultsInfo = document.getElementById('resultsInfoRPS');
+            const tableContainer = document.querySelector('#tab-rps .table-container');
+            
+            if (!tbody) return;
+            
+            // Add fade animation to table container
+            if (tableContainer) {
+                tableContainer.style.opacity = '0.5';
+                tableContainer.style.transform = 'translateY(5px)';
+            }
+            
+            if (filteredRPSData.length === 0) {
+                tbody.innerHTML = '';
+                if (noResults) noResults.style.display = 'block';
+                if (resultsInfo) resultsInfo.textContent = '';
+                if (tableContainer) {
+                    setTimeout(() => {
+                        tableContainer.style.opacity = '1';
+                        tableContainer.style.transform = 'translateY(0)';
+                    }, 100);
+                }
+            } else {
+                if (noResults) noResults.style.display = 'none';
+                if (resultsInfo) {
+                    resultsInfo.textContent = `Nalezeno ${filteredRPSData.length} ${filteredRPSData.length === 1 ? 'záznam' : filteredRPSData.length < 5 ? 'záznamy' : 'záznamů'}`;
+                }
+                
+                tbody.innerHTML = filteredRPSData.map((item, index) => {
+                    let categoryCell = `<td class="kategorie">${highlightTextPlainRPS(item.kategorie, currentRPSSearchTerm)}</td>`;
+                    
+                    let formattedBrandModel = formatBrandModelTextRPS(item.znacka_typ, item.kategorie);
+                    
+                    if (currentRPSSearchTerm && formattedBrandModel) {
+                        const parts = formattedBrandModel.split(/(<strong>.*?<\/strong>)/g);
+                        formattedBrandModel = parts.map(part => {
+                            if (part.startsWith('<strong>')) {
+                                const innerText = part.replace(/<\/?strong>/g, '');
+                                const highlightedInner = highlightTextPlainRPS(innerText, currentRPSSearchTerm);
+                                return `<strong>${highlightedInner}</strong>`;
+                            } else {
+                                return highlightTextPlainRPS(part, currentRPSSearchTerm);
+                            }
+                        }).join('');
+                    }
+                    
+                    return `
+                    <tr style="animation-delay: ${index * 0.02}s;">
+                        ${categoryCell}
+                        <td class="znacka-typ">${formattedBrandModel}</td>
+                        <td class="cena">${item.cena_1_10_dni.toLocaleString('cs-CZ')} Kč</td>
+                        <td class="cena">${item.cena_11_30_dni.toLocaleString('cs-CZ')} Kč</td>
+                    </tr>
+                `;
+                }).join('');
+                
+                // Restore table container opacity after content is loaded
+                if (tableContainer) {
+                    setTimeout(() => {
+                        tableContainer.style.opacity = '1';
+                        tableContainer.style.transform = 'translateY(0)';
+                    }, 100);
+                }
+            }
+        }
+        
+        // Initial load for RPS - ensure it's called after DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                if (cenÝkRPSData.length > 0) {
+                    sortRPSData('kategorie', 'asc');
+                }
+            });
+        } else {
+            // DOM is already ready
+            if (cenÝkRPSData.length > 0) {
+                sortRPSData('kategorie', 'asc');
+            }
+        }
     </script>
 </body>
 </html>
