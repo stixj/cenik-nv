@@ -3219,9 +3219,36 @@
                 return;
             }
             
-            if ((currentYear - yearOfProduction) > 8) {
-                // Vehicle is older than 8 years, apply 20% discount instead of category reduction
-                apply20PercentDiscount = true;
+            // Check if damaged vehicle is older than 8 years
+            const isDamagedVehicleOlderThan8Years = (currentYear - yearOfProduction) > 8;
+            
+            if (isDamagedVehicleOlderThan8Years) {
+                // 20% discount applies ONLY if rental vehicle is the SAME category as damaged vehicle
+                // If rental vehicle is LOWER category, NO discount is applied
+                let isSameCategory = false;
+                
+                if (damagedCategoryForComparison) {
+                    // Special handling: if both are "vozy Škoda", compare by price instead of category
+                    if (rentalCategory === 'vozy Škoda' && damagedCategoryForComparison === 'vozy Škoda') {
+                        // Find prices for both vehicles
+                        const rentalPrice = findPriceByCategory(rentalCategory, znackaPronajmene, modelPronajmene);
+                        const damagedPrice = findPriceByCategory(damagedCategoryForComparison, znackaPoskozene, modelPoskozene);
+                        
+                        if (rentalPrice && damagedPrice) {
+                            // Compare by price (1-10 days) - same category if prices are equal
+                            isSameCategory = (rentalPrice.cena_1_10 === damagedPrice.cena_1_10);
+                        }
+                    } else {
+                        // Normal category comparison - same category if comparison returns 0
+                        const comparison = compareCategories(rentalCategory, damagedCategoryForComparison);
+                        isSameCategory = (comparison === 0);
+                    }
+                }
+                
+                // Apply 20% discount only if same category
+                if (isSameCategory) {
+                    apply20PercentDiscount = true;
+                }
                 // Keep original category, no downgrade needed
                 finalCategory = baseCategory;
             }
@@ -3419,8 +3446,8 @@
                 (text.split(',').length === 1 && !findMatchingBrand(text));
             
             if (isSkodaCategory) {
-                // For Škoda category, just return text as is (no brands to make bold)
-                return text;
+                // For Škoda category, replace " + " with ", " but don't format brands
+                return text.replace(/\s*\+\s*/g, ', ');
             }
             
             // Replace " + " with ", " and " +" or "+ " with ", " (for cases like "5+6" or "A4 +A5")
@@ -3581,45 +3608,9 @@
                 price11_30 = Math.round(price11_30 * 0.8);
             }
 
-            // Find equivalent category for Škoda vehicles to display in category name
-            let equivalentCategoryName = null;
-            if (finalCategory === 'vozy Škoda' && znackaPoskozene && modelPoskozene) {
-                const brandLower = znackaPoskozene.toLowerCase();
-                const modelLower = modelPoskozene.toLowerCase();
-                
-                if (brandLower === 'škoda' || brandLower === 'skoda') {
-                    const equivalentMapping = skodaVWMapping.find(mapping => {
-                        const skodaModelLower = mapping.skoda.toLowerCase();
-                        const mappingModelName = skodaModelLower.replace('škoda ', '').trim();
-                        const mappingModelBase = mappingModelName.split(' ')[0];
-                        const inputModelBase = modelLower.split(' ')[0];
-                        
-                        if (mappingModelBase === inputModelBase) {
-                            return true;
-                        }
-                        
-                        if (mappingModelName.includes(inputModelBase) || inputModelBase.includes(mappingModelBase)) {
-                            return true;
-                        }
-                        
-                        if (skodaModelLower.includes(inputModelBase)) {
-                            return true;
-                        }
-                        
-                        return false;
-                    });
-                    
-                    if (equivalentMapping && equivalentMapping.kategorie) {
-                        equivalentCategoryName = equivalentMapping.kategorie.trim();
-                    }
-                }
-            }
-
-            // Display category name (with equivalent category for Škoda if found)
-            let categoryDisplayName = finalCategory;
-            if (equivalentCategoryName) {
-                categoryDisplayName = finalCategory + ' a ' + equivalentCategoryName;
-            }
+            // Display category name (no equivalent category display for Škoda)
+            // Replace "vozy Škoda" with "Škoda" for display
+            let categoryDisplayName = finalCategory === 'vozy Škoda' ? 'Škoda' : finalCategory;
             const categoryNameElement = document.getElementById('damagedCategoryName');
             categoryNameElement.textContent = categoryDisplayName;
             
@@ -3696,7 +3687,7 @@
                         return false;
                     });
                     
-                    // Display the specific Škoda model row
+                    // Display only the specific Škoda model row (not all models from the category)
                     if (skodaModelRow) {
                         const row = document.createElement('tr');
                         const formattedText = formatBrandModelText(skodaModelRow.znacka_typ);
@@ -3706,57 +3697,6 @@
                             <td>${skodaModelRow.cena_11_30_dni.toLocaleString('cs-CZ')} Kč</td>
                         `;
                         modelsBody.appendChild(row);
-                    }
-                    
-                    // Find equivalent category from mapping table
-                    const equivalentMapping = skodaVWMapping.find(mapping => {
-                        const skodaModelLower = mapping.skoda.toLowerCase();
-                        // Extract model name from mapping (e.g., "škoda fabia" -> "fabia")
-                        const mappingModelName = skodaModelLower.replace('škoda ', '').trim();
-                        // Extract base model name (first word, e.g., "fabia" or "octavia i" -> "octavia")
-                        const mappingModelBase = mappingModelName.split(' ')[0];
-                        
-                        // Extract base model from input (e.g., "fabia" or "octavia i" -> "fabia" or "octavia")
-                        const inputModelBase = modelLower.split(' ')[0];
-                        
-                        // Direct match of base models
-                        if (mappingModelBase === inputModelBase) {
-                            return true;
-                        }
-                        
-                        // Check if mapping model name contains input model or vice versa
-                        // (e.g., "fabia" matches "fabia", "octavia i" matches "octavia")
-                        if (mappingModelName.includes(inputModelBase) || inputModelBase.includes(mappingModelBase)) {
-                            return true;
-                        }
-                        
-                        // Also check if full mapping model contains input model
-                        // (e.g., "škoda fabia" contains "fabia")
-                        if (skodaModelLower.includes(inputModelBase)) {
-                            return true;
-                        }
-                        
-                        return false;
-                    });
-                    
-                    // Display all models from equivalent category
-                    if (equivalentMapping && equivalentMapping.kategorie) {
-                        // Filter by category, ignoring trailing spaces
-                        const equivalentCategoryModels = cenÝkData.filter(data => {
-                            const dataCategory = (data.kategorie || '').trim();
-                            const mappingCategory = (equivalentMapping.kategorie || '').trim();
-                            return dataCategory === mappingCategory;
-                        });
-                        equivalentCategoryModels.forEach(item => {
-                            const row = document.createElement('tr');
-                            const formattedText = formatBrandModelText(item.znacka_typ);
-                            row.innerHTML = `
-                                <td>${formattedText}</td>
-                                <td>${item.cena_1_10_dni.toLocaleString('cs-CZ')} Kč</td>
-                                <td>${item.cena_11_30_dni.toLocaleString('cs-CZ')} Kč</td>
-                            `;
-                            modelsBody.appendChild(row);
-                        });
                     }
                 } else {
                     // Not Škoda brand, use normal logic

@@ -1779,7 +1779,9 @@
                         categoryCell = '<td class="kategorie"></td>';
                     } else {
                         // For Octavia I + II row and all other categories, show category name
-                        categoryCell = `<td class="kategorie">${highlightTextPlain(item.kategorie, currentSearchTerm)}</td>`;
+                        // Replace "vozy Škoda" with "Škoda" for display
+                        let displayCategory = item.kategorie === 'vozy Škoda' ? 'Škoda' : item.kategorie;
+                        categoryCell = `<td class="kategorie">${highlightTextPlain(displayCategory, currentSearchTerm)}</td>`;
                     }
                     
                     // First apply highlighting to original text
