@@ -3277,10 +3277,35 @@
             }
             
             if (price) {
-                // Apply 20% discount if vehicle is older than 8 years
                 let finalPrice1_10 = price.cena_1_10 || price.cena_1_10_dni;
                 let finalPrice11_30 = price.cena_11_30 || price.cena_11_30_dni;
                 
+                // Additional check: if categories cannot be compared or rental price is higher than damaged price,
+                // use damaged vehicle price as maximum
+                let shouldUseDamagedPriceAsMax = false;
+                if (damagedCategory && znackaPoskozene && modelPoskozene && !useDamagedVehiclePrice) {
+                    // Get damaged vehicle price
+                    let damagedPrice = null;
+                    if (damagedCategory === 'vozy Škoda') {
+                        damagedPrice = findPriceByCategory(damagedCategory, znackaPoskozene, modelPoskozene);
+                    } else {
+                        damagedPrice = findPriceByCategory(damagedCategory);
+                    }
+                    
+                    if (damagedPrice) {
+                        const damagedPrice1_10 = damagedPrice.cena_1_10 || damagedPrice.cena_1_10_dni;
+                        const damagedPrice11_30 = damagedPrice.cena_11_30 || damagedPrice.cena_11_30_dni;
+                        
+                        // If rental price is higher than damaged price, use damaged price as maximum
+                        if (finalPrice1_10 > damagedPrice1_10 || finalPrice11_30 > damagedPrice11_30) {
+                            finalPrice1_10 = damagedPrice1_10;
+                            finalPrice11_30 = damagedPrice11_30;
+                            shouldUseDamagedPriceAsMax = true;
+                        }
+                    }
+                }
+                
+                // Apply 20% discount if vehicle is older than 8 years (after price cap check)
                 if (apply20PercentDiscount) {
                     finalPrice1_10 = Math.round(finalPrice1_10 * 0.8);
                     finalPrice11_30 = Math.round(finalPrice11_30 * 0.8);
@@ -3294,7 +3319,8 @@
                 
                 // Check if rental vehicle was higher class than damaged vehicle
                 // This applies both for normal category comparison and for Škoda price comparison
-                if (useDamagedVehiclePrice || (damagedCategory && compareCategories(rentalCategory, damagedCategory) > 0)) {
+                // Also applies when rental price is higher than damaged price (even if categories cannot be compared)
+                if (useDamagedVehiclePrice || shouldUseDamagedPriceAsMax || (damagedCategory && compareCategories(rentalCategory, damagedCategory) > 0)) {
                     notes.push('Nárok max. podle třídy poškozeného vozidla');
                 }
                 
